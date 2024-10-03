@@ -1,8 +1,8 @@
 {
-  "name": "monefy",
+  "name": "budgetbuddy",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Monefy",
+  "productName": "BudgetBuddy",
   "author": "Giorgio Vitale <giorgio.vitale.90@gmail.com>",
   "type": "module",
   "private": true,

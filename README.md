@@ -1,4 +1,4 @@
-# Monefy (monefy)
+# Budget Buddy
 
 A Quasar Project
 

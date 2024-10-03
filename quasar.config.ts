@@ -198,7 +198,7 @@ export default configure((/* ctx */) => {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'monefy',
+        appId: 'budgetbuddy',
       },
     },
 

@@ -55,7 +55,7 @@ import BigDecimalUtil from 'src/utils/big-decimal-util';
 import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
 
 defineOptions({
-  name: 'MonefyHomePage',
+  name: 'BudgetBuddyHomePage',
 });
 
 const intervalStore = useIntervalStore();
