@@ -2,19 +2,21 @@
 
 # P0
 
+- Export dati
+- Modifica spesa
+- Elimina spesa
+
 # P1
 
-- Salvataggio backend
-- Export dati
+- Selezionare colore categoria
+- Selezionare icona categoria
+- Import dati
 
 # P2
 
-- Selezionare tipo intervallo temporale
-- Modificare spesa
+- Crea template
 - Eliminare categoria (se vuota)
 - Eliminare account (se vuoto)
 - Visualizzare grafico spese
 - Visualizzare andamento spese
-- Selezionare colore categoria
-- Selezionare icona categoria
-- Crea preferiti
+- Salvataggio backend

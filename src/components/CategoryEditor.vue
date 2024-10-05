@@ -1,5 +1,5 @@
 <template>
-  <q-form class="col-12 q-pa-md q-gutter-y-md" style="max-width: 600px" greedy>
+  <q-form class="col-12 q-gutter-y-md" style="max-width: 600px" greedy>
     <q-btn-group spread>
       <q-btn
         :color="editor.type === 'debit' ? 'primary' : undefined"
