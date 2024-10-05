@@ -48,11 +48,11 @@
   </q-list>
 </template>
 <script setup lang="ts">
-import { useExpenseStore } from 'src/stores/expenses-store';
 import { computed } from 'vue';
 import CategoryEditor from './CategoryEditor.vue';
+import { useCategoryStore } from 'src/stores/categories-store';
 
-const expenseStore = useExpenseStore();
+const categoryStore = useCategoryStore();
 
-const elements = computed(() => expenseStore.categories());
+const elements = computed(() => categoryStore.categories());
 </script>

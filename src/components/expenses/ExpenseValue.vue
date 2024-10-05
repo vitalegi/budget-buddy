@@ -1,41 +1,37 @@
 <template>
   <span class="balance-entry-value" :class="amountType">
-    <span class="text-weight-medium"> {{ formatAmountIntPart(amount) }}</span>
+    <span class="text-weight-medium"> {{ formatAmountIntPart }}</span>
     <span class="decimal-part"
-      >,{{ formatAmountDecimalPart(amount) }} {{ currency }}
+      >,{{ formatAmountDecimalPart }} {{ currency }}
     </span>
   </span>
 </template>
 
 <script setup lang="ts">
 import bigDecimal from 'js-big-decimal';
-import { ExpenseType } from 'src/model/expense-type';
 import BigDecimalUtil from 'src/utils/big-decimal-util';
 import { computed } from 'vue';
 
 interface Props {
-  amount: string;
+  amount: bigDecimal;
   currency: string;
-  type: ExpenseType;
 }
 
 const props = defineProps<Props>();
 
 const amountType = computed(() =>
-  props.type === 'credit' ? 'credit' : 'debit',
+  props.amount.compareTo(BigDecimalUtil.ZERO) >= 0 ? 'credit' : 'debit',
 );
 
-function formatAmountIntPart(amount: string): string {
-  const val = new bigDecimal(amount);
-  const parts = BigDecimalUtil.format(val);
+const formatAmountIntPart = computed((): string => {
+  const parts = BigDecimalUtil.format(props.amount);
   return parts.integerPart;
-}
+});
 
-function formatAmountDecimalPart(amount: string): string {
-  const val = new bigDecimal(amount);
-  const parts = BigDecimalUtil.format(val);
+const formatAmountDecimalPart = computed((): string => {
+  const parts = BigDecimalUtil.format(props.amount);
   return parts.decimalPart;
-}
+});
 </script>
 
 <style scoped lang="scss">

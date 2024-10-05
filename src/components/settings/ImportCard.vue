@@ -1,6 +1,6 @@
 <template>
-  <q-card class="col-12 q-gutter-y-md">
-    <q-card-section>
+  <q-card>
+    <q-card-section class="col-12 q-gutter-y-md">
       <q-file
         outlined
         v-model="model"
@@ -11,6 +11,7 @@
           <q-icon name="attach_file" />
         </template>
       </q-file>
+      <q-input v-model="sample" filled autogrow readonly />
     </q-card-section>
   </q-card>
 </template>
@@ -21,25 +22,37 @@ import { Notify } from 'quasar';
 import Account from 'src/model/account';
 import Category from 'src/model/category';
 import { ExpenseType } from 'src/model/expense-type';
+import { useAccountStore } from 'src/stores/accounts-store';
+import { useCategoryStore } from 'src/stores/categories-store';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import ArrayUtil from 'src/utils/array-util';
 import BigDecimalUtil from 'src/utils/big-decimal-util';
 import { ref } from 'vue';
 
 const model = ref();
+const sample = ref(
+  'date;debit account;credit account;category;amount;currency;description\n2024-12-31;Cash;;Grocery;20;EUR;Sample content',
+);
 
 const loading = ref(false);
 
 const expenseStore = useExpenseStore();
+const categoryStore = useCategoryStore();
+const accountStore = useAccountStore();
 
 class ExpenseIn {
   id = '';
   date = '';
-  accountName = '';
-  categoryName = '';
+  creditAccountName: string | null = null;
+  debitAccountName: string | null = null;
+  categoryName: string | null = null;
   currency = '';
   amount = '';
   description = '';
+
+  public isTransfer(): boolean {
+    return this.creditAccountName !== null && this.debitAccountName !== null;
+  }
 }
 
 async function processFile(e: File) {
@@ -85,7 +98,8 @@ function isHeader(line: string): boolean {
   const actual = line.split(';').map((c) => c.toLowerCase().trim());
   const target = [
     'date',
-    'account',
+    'debit account',
+    'credit account',
     'category',
     'amount',
     'currency',
@@ -104,7 +118,7 @@ function isHeader(line: string): boolean {
 
 function mapLine(line: string): ExpenseIn {
   const columns = line.split(';');
-  if (columns.length < 6) {
+  if (columns.length < 7) {
     throw new Error('not all columns are present in the file');
   }
   const out = new ExpenseIn();
@@ -117,19 +131,31 @@ function mapLine(line: string): ExpenseIn {
       `date is invalid, expected format yyyy-MM-dd, found value: ${date}`,
     );
   }
-  const account = columns[1].trim();
-  if (account === '') {
-    throw new Error('account is empty');
-  }
-  out.accountName = account;
 
-  const category = columns[2].trim();
-  if (category === '') {
-    throw new Error('category is empty');
+  const debit = columns[1].trim();
+  if (debit.length > 0) {
+    out.debitAccountName = debit;
   }
-  out.categoryName = category;
+  const credit = columns[2].trim();
+  if (credit.length > 0) {
+    out.creditAccountName = credit;
+  }
+  if (out.debitAccountName == null && out.creditAccountName == null) {
+    throw new Error('both debit and credit accounts are null');
+  }
 
-  const amount = columns[3].trim();
+  const category = columns[3].trim();
+  if (category.length > 0) {
+    out.categoryName = category;
+  }
+  if (!out.isTransfer() && out.categoryName === null) {
+    throw new Error('category is required');
+  }
+  if (out.isTransfer() && out.categoryName !== null) {
+    throw new Error('category must be null on a transfer');
+  }
+
+  const amount = columns[4].trim();
   try {
     const value = new bigDecimal(amount);
     if (value.compareTo(BigDecimalUtil.ZERO) === 0) {
@@ -140,13 +166,13 @@ function mapLine(line: string): ExpenseIn {
     throw new Error(`amount is not a valid number, found value: ${amount}`);
   }
 
-  const currency = columns[4].trim();
+  const currency = columns[5].trim();
   if (currency === '') {
     throw new Error('currency is empty');
   }
   out.currency = currency;
 
-  out.description = columns[5];
+  out.description = columns[6];
   return out;
 }
 
@@ -155,12 +181,14 @@ async function importEntries(entries: ExpenseIn[]): Promise<void> {
   const categoryMap = await importCategories(entries);
 
   for (let e of entries) {
-    const account = accountMap.get(e.accountName)?.id || '';
-    const category = categoryMap.get(e.categoryName)?.id || '';
+    const debit = mapExtractor(accountMap, e.debitAccountName, (v) => v.id);
+    const credit = mapExtractor(accountMap, e.creditAccountName, (v) => v.id);
+    const category = mapExtractor(categoryMap, e.categoryName, (v) => v.id);
     const amount = new bigDecimal(e.amount).abs().getValue();
     await expenseStore.addExpense(
       e.date,
-      account,
+      credit,
+      debit,
       category,
       amount,
       e.description,
@@ -168,21 +196,43 @@ async function importEntries(entries: ExpenseIn[]): Promise<void> {
   }
 }
 
+function mapExtractor<E>(
+  map: Map<string, E>,
+  key: string | null,
+  fn: (e: E) => string,
+): string | null {
+  if (key === null) {
+    return null;
+  }
+  const value = map.get(key);
+  if (value) {
+    return fn(value);
+  }
+  return null;
+}
+
 async function importAccounts(
   entries: ExpenseIn[],
 ): Promise<Map<string, Account>> {
   // accounts
-  const receivedAccounts = ArrayUtil.distinct(
-    entries.map((e) => e.accountName),
+
+  let accounts = new Array<string>();
+  accounts.push(
+    ...entries.map((e) => e.debitAccountName).filter((e) => e !== null),
   );
+  accounts.push(
+    ...entries.map((e) => e.creditAccountName).filter((e) => e !== null),
+  );
+  accounts = ArrayUtil.distinct(accounts);
+
   const accountMap = new Map<string, Account>();
-  for (let e of receivedAccounts) {
-    const matches = expenseStore.accounts.filter(
+  for (let e of accounts) {
+    const matches = accountStore.accounts.filter(
       (v) => v.name.toLowerCase() === e.toLowerCase(),
     );
 
     if (matches.length === 0) {
-      const entry = await expenseStore.addAccount(e, '', true, '', '');
+      const entry = await accountStore.addAccount(e, '', true, '', '');
       accountMap.set(e, entry);
     } else {
       accountMap.set(e, matches[0]);
@@ -195,17 +245,17 @@ async function importCategories(
   entries: ExpenseIn[],
 ): Promise<Map<string, Category>> {
   const receivedCategories = ArrayUtil.distinct(
-    entries.map((e) => e.categoryName),
+    entries.map((e) => e.categoryName).filter((e) => e !== null),
   );
   const categoryMap = new Map<string, Category>();
   for (let e of receivedCategories) {
-    const matches = expenseStore
+    const matches = categoryStore
       .categories()
       .filter((v) => v.name.toLowerCase() === e.toLowerCase());
 
     if (matches.length === 0) {
       const type = expenseType(entries, e);
-      const entry = await expenseStore.addCategory(e, true, type, '', '');
+      const entry = await categoryStore.addCategory(e, true, type, '', '');
       categoryMap.set(e, entry);
     } else {
       categoryMap.set(e, matches[0]);

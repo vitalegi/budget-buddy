@@ -44,10 +44,10 @@
   </q-form>
 </template>
 <script setup lang="ts">
-import { useExpenseStore } from 'src/stores/expenses-store';
+import { useAccountStore } from 'src/stores/accounts-store';
 import { computed, onMounted, ref } from 'vue';
 
-const expenseStore = useExpenseStore();
+const accountStore = useAccountStore();
 
 interface Props {
   id: string;
@@ -86,7 +86,7 @@ function update(): void {
 
 function save(): void {
   if (props.id !== '') {
-    expenseStore.updateAccount(
+    accountStore.updateAccount(
       editor.value.id,
       editor.value.name.trim(),
       editor.value.currency,
@@ -95,7 +95,7 @@ function save(): void {
       editor.value.color,
     );
   } else {
-    expenseStore.addAccount(
+    accountStore.addAccount(
       editor.value.name.trim(),
       editor.value.currency,
       editor.value.active,

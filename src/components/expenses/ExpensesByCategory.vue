@@ -11,11 +11,7 @@
 
       <q-item-section side>
         <q-item-label>
-          <ExpenseValue
-            :amount="amount"
-            currency=""
-            :type="category.type"
-          ></ExpenseValue>
+          <ExpenseValue :amount="amount" currency=""></ExpenseValue>
         </q-item-label>
       </q-item-section>
     </template>
@@ -52,7 +48,5 @@ const expensesWithCategory = computed(() => {
   );
 });
 
-const amount = computed(() =>
-  ExpenseUtil.sum(expensesWithCategory.value).getValue(),
-);
+const amount = computed(() => ExpenseUtil.sum(expensesWithCategory.value));
 </script>

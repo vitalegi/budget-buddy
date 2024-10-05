@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ExpenseType } from 'src/model/expense-type';
-import { useExpenseStore } from 'src/stores/expenses-store';
+import { useCategoryStore } from 'src/stores/categories-store';
 import { computed } from 'vue';
 
 const model = defineModel<string>();
@@ -26,9 +26,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const expenseStore = useExpenseStore();
+const categoryStore = useCategoryStore();
 
 const categories = computed(() =>
-  expenseStore.categories(props.type).filter((c) => c.active),
+  categoryStore.categories(props.type).filter((c) => c.active),
 );
 </script>

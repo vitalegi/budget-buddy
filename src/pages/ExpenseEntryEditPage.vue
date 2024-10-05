@@ -13,10 +13,10 @@
     <ExpenseEntryEditor
       v-if="expense"
       :add-mode="false"
-      :type="expense.category.type"
+      :type="type"
       :oldDate="expense.date"
-      :oldAccountId="expense.account.id"
-      :oldCategoryId="expense.category.id"
+      :oldAccountId="accountId"
+      :oldCategoryId="categoryId"
       :oldDescription="expense.description"
       :oldAmount="expense.amount"
       @submit="update"
@@ -26,6 +26,7 @@
 <script setup lang="ts">
 import { Notify } from 'quasar';
 import ExpenseEntryEditor from 'src/components/expenses/ExpenseEntryEditor.vue';
+import { ExpenseType } from 'src/model/expense-type';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -49,6 +50,46 @@ const expense = computed(() => {
   }
 });
 
+const creditId = computed(() => {
+  if (expense.value?.credit) {
+    return expense.value.credit.id;
+  }
+  return null;
+});
+
+const debitId = computed(() => {
+  if (expense.value?.debit) {
+    return expense.value.debit.id;
+  }
+  return null;
+});
+
+const accountId = computed(() => {
+  if (creditId.value) {
+    return creditId.value;
+  }
+  if (debitId.value) {
+    return debitId.value;
+  }
+  return undefined;
+});
+
+const type = computed((): ExpenseType => {
+  const value = expense.value;
+  if (value?.category?.type) {
+    return value.category.type;
+  }
+  throw new Error("Expense can't be edited on this page");
+});
+
+const categoryId = computed((): string => {
+  const value = expense.value;
+  if (value?.category?.id) {
+    return value.category.id;
+  }
+  throw new Error("Expense can't be edited on this page");
+});
+
 async function update(evt: {
   date: string;
   accountId: string;
@@ -57,10 +98,20 @@ async function update(evt: {
   amount: string;
 }): Promise<void> {
   try {
+    let credit: string | null = null;
+    let debit: string | null = null;
+    if (expense.value?.credit) {
+      credit = evt.accountId;
+    }
+    if (expense.value?.debit != null) {
+      debit = evt.accountId;
+    }
+
     await expenseStore.updateExpense(
       props.expenseId,
       evt.date,
-      evt.accountId,
+      credit,
+      debit,
       evt.categoryId,
       evt.amount,
       evt.description,

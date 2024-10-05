@@ -2,7 +2,7 @@ import NumberUtil from './number-util';
 import ObjectUtil from './object-util';
 
 export default class JsonUtil {
-  public static asIntNullable = (value: unknown): number | null => {
+  public static asIntNullable(value: unknown): number | null {
     if (ObjectUtil.isNullOrUndefined(value)) {
       return null;
     }
@@ -13,7 +13,7 @@ export default class JsonUtil {
       return NumberUtil.parseAsInt(value);
     }
     throw Error(`Value is not a number ${value}: ${typeof value}`);
-  };
+  }
 
   /**
    *
@@ -21,10 +21,10 @@ export default class JsonUtil {
    * @param defaultValue a number if value is optional, false if mandatory
    * @returns
    */
-  public static asInt = (
+  public static asInt(
     value: unknown,
     defaultValue: number | false = false,
-  ): number => {
+  ): number {
     const v = JsonUtil.asIntNullable(value);
     if (v === null) {
       if (defaultValue === false) {
@@ -33,7 +33,7 @@ export default class JsonUtil {
       return defaultValue;
     }
     return v;
-  };
+  }
 
   /**
    *
@@ -41,10 +41,10 @@ export default class JsonUtil {
    * @param defaultValue a number if value is optional, false if mandatory
    * @returns
    */
-  public static asDecimal = (
+  public static asDecimal(
     value: unknown,
     defaultValue: number | false = false,
-  ): number => {
+  ): number {
     if (ObjectUtil.isNullOrUndefined(value)) {
       if (defaultValue === false) {
         throw Error('Value is mandatory');
@@ -58,7 +58,7 @@ export default class JsonUtil {
       return NumberUtil.parseAsDecimal(value);
     }
     throw Error(`Value is not a number ${value}: ${typeof value}`);
-  };
+  }
 
   /**
    *
@@ -66,10 +66,10 @@ export default class JsonUtil {
    * @param defaultValue a string if value is optional, false if mandatory
    * @returns
    */
-  public static asString = (
+  public static asString(
     value: unknown,
     defaultValue: string | false = false,
-  ): string => {
+  ): string {
     if (ObjectUtil.isNullOrUndefined(value)) {
       if (defaultValue === false) {
         throw Error('Value is mandatory');
@@ -80,12 +80,16 @@ export default class JsonUtil {
       return value;
     }
     throw Error(`Value is not a string ${value}: ${typeof value}`);
-  };
+  }
 
-  public static asBoolean = (
-    value: unknown,
-    defaultValue: boolean,
-  ): boolean => {
+  public static asStringNullable(value: unknown): string | null {
+    if (ObjectUtil.isNullOrUndefined(value)) {
+      return null;
+    }
+    return JsonUtil.asString(value);
+  }
+
+  public static asBoolean(value: unknown, defaultValue: boolean): boolean {
     if (ObjectUtil.isNullOrUndefined(value)) {
       return defaultValue;
     }
@@ -93,12 +97,12 @@ export default class JsonUtil {
       return value;
     }
     throw Error(`Value is not a boolean ${value}: ${typeof value}`);
-  };
+  }
 
-  public static asDateOptional = (
+  public static asDateOptional(
     value: unknown,
     defaultValue?: Date,
-  ): Date | undefined => {
+  ): Date | undefined {
     if (ObjectUtil.isNullOrUndefined(value)) {
       if (defaultValue) {
         return defaultValue;
@@ -112,13 +116,13 @@ export default class JsonUtil {
       return new Date(Date.parse(value));
     }
     throw Error(`Value is not a Date ${value}: ${typeof value}`);
-  };
+  }
 
-  public static asDate = (value: unknown): Date => {
+  public static asDate(value: unknown): Date {
     const out = JsonUtil.asDateOptional(value, undefined);
     if (out === undefined) {
       throw Error('Value is undefined');
     }
     return out;
-  };
+  }
 }

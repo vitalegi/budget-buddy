@@ -5,9 +5,8 @@
     <q-item-section top>
       <q-item-label @click="openEditor">
         <ExpenseValue
-          :amount="expense.amount"
-          :currency="expense.account.currency"
-          :type="expense.category.type"
+          :amount="amount"
+          :currency="expense.credit?.currency || 'TODO'"
         ></ExpenseValue>
         &nbsp; &nbsp; &nbsp;
         <span class="text-grey-8"> {{ expense.description }}</span>
@@ -28,6 +27,7 @@ import ExpenseValue from './ExpenseValue.vue';
 import { computed } from 'vue';
 import { format } from 'date-fns';
 import { useRouter } from 'vue-router';
+import bigDecimal from 'js-big-decimal';
 
 interface Props {
   expense: Expense;
@@ -38,6 +38,8 @@ const dateLabel = computed(() => format(props.expense.date, 'd LLL'));
 const props = defineProps<Props>();
 
 const router = useRouter();
+
+const amount = computed(() => new bigDecimal(props.expense.amount));
 
 function openEditor() {
   router.push(`/edit/${props.expense.id}`);

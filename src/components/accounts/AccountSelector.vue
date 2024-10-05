@@ -14,12 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import { useExpenseStore } from 'src/stores/expenses-store';
+import { useAccountStore } from 'src/stores/accounts-store';
 import { computed } from 'vue';
 
 const model = defineModel<string>();
 
-const expenseStore = useExpenseStore();
+const accountStore = useAccountStore();
 
-const accounts = computed(() => expenseStore.accounts.filter((a) => a.active));
+const accounts = computed(() => accountStore.accounts.filter((a) => a.active));
 </script>

@@ -13,23 +13,15 @@ export default class BigDecimalUtil {
     };
   }
 
-  public static round(val: bigDecimal, precision: number): bigDecimal {
-    return val.round(precision, bigDecimal.RoundingModes.HALF_DOWN);
-  }
-
   public static getIntegerPart(val: bigDecimal): bigDecimal {
-    if (val.compareTo(BigDecimalUtil.ZERO) >= 0) {
-      return val.round(0, bigDecimal.RoundingModes.DOWN);
-    } else {
-      return val.round(0, bigDecimal.RoundingModes.UP);
-    }
+    return val.round(0, bigDecimal.RoundingModes.DOWN);
   }
 
   public static getDecimalPart(val: bigDecimal, precision: number): bigDecimal {
     const abs = val.abs();
-    const integerPart = BigDecimalUtil.getIntegerPart(abs);
+    const integerPart = BigDecimalUtil.getIntegerPart(abs).abs();
     return abs
-      .subtract(integerPart.floor())
+      .subtract(integerPart)
       .round(precision, bigDecimal.RoundingModes.DOWN);
   }
 }

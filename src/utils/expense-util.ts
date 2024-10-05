@@ -1,30 +1,46 @@
 import bigDecimal from 'js-big-decimal';
-import Expense from 'src/model/expense';
+import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 import BigDecimalUtil from './big-decimal-util';
 import Category from 'src/model/category';
 import MapUtil from './map.util';
+import { format } from 'date-fns';
 
 export default class ExpenseUtil {
   public static sum(expenses: Expense[]): bigDecimal {
-    return expenses
-      .map((e) => new bigDecimal(e.amount))
-      .reduce(
-        (prev: bigDecimal, curr: bigDecimal) => prev.add(curr),
-        BigDecimalUtil.ZERO,
-      );
+    let amount = BigDecimalUtil.ZERO;
+    for (const expense of expenses) {
+      if (expense.isCredit()) {
+        amount = amount.add(new bigDecimal(expense.amount));
+      }
+      if (expense.isDebit()) {
+        amount = amount.subtract(new bigDecimal(expense.amount));
+      }
+      if (expense.isTransfer()) {
+        // TODO
+      }
+    }
+    return amount;
+  }
+
+  public static inInterval(date: string, from: Date, to: Date): boolean {
+    return (
+      format(from, EXPENSE_DATE_FORMAT) <= date &&
+      date <= format(to, EXPENSE_DATE_FORMAT)
+    );
   }
 
   public static filterByCategory(
     expenses: Expense[],
     categoryId: string,
   ): Expense[] {
-    return expenses.filter((e) => e.category.id === categoryId);
+    return expenses.filter((e) => e.category?.id === categoryId);
   }
 
   public static getCategories(expenses: Expense[]): Category[] {
     const map = new Map<string, Category>();
     expenses
       .map((e) => e.category)
+      .filter((e) => e !== null)
       .forEach((c) => {
         if (!map.has(c.id)) {
           map.set(c.id, c);
@@ -40,6 +56,9 @@ export default class ExpenseUtil {
     const categories = ExpenseUtil.getCategories(expenses);
     const map = new Map<string, bigDecimal>();
     expenses.forEach((e) => {
+      if (!e.category) {
+        return;
+      }
       let entry = map.get(e.category.id);
       if (entry === undefined) {
         entry = BigDecimalUtil.ZERO;

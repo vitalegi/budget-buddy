@@ -7,19 +7,31 @@ export const EXPENSE_DATE_FORMAT = 'yyyy-MM-dd';
 export default class Expense {
   id = '';
   date = '';
-  account = new Account();
-  category = new Category();
+  credit: Account | null = null;
+  debit: Account | null = null;
+  category: Category | null = null;
   amount = '';
   description = '';
   creationDate = new Date();
   lastUpdate = new Date();
+
+  public isTransfer(): boolean {
+    return this.credit !== null && this.debit !== null;
+  }
+  public isCredit(): boolean {
+    return this.credit !== null && this.debit === null;
+  }
+  public isDebit(): boolean {
+    return this.credit === null && this.debit !== null;
+  }
 }
 
 export class ExpenseDto {
   id = '';
   date = '';
-  accountId = '';
-  categoryId = '';
+  creditId: string | null = '';
+  debitId: string | null = '';
+  categoryId: string | null = null;
   amount = '';
   description = '';
   creationDate = new Date();
@@ -30,8 +42,9 @@ export class ExpenseDto {
     const out = new ExpenseDto();
     out.id = JsonUtil.asString(obj.id);
     out.date = JsonUtil.asString(obj.date);
-    out.accountId = JsonUtil.asString(obj.accountId);
-    out.categoryId = JsonUtil.asString(obj.categoryId);
+    out.creditId = JsonUtil.asStringNullable(obj.creditId);
+    out.debitId = JsonUtil.asStringNullable(obj.debitId);
+    out.categoryId = JsonUtil.asStringNullable(obj.categoryId);
     out.amount = JsonUtil.asString(obj.amount);
     out.description = JsonUtil.asString(obj.description);
 

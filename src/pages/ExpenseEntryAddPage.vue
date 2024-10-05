@@ -21,7 +21,7 @@ interface Props {
   type: ExpenseType;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const expenseStore = useExpenseStore();
 
@@ -35,9 +35,24 @@ async function add(evt: {
   amount: string;
 }): Promise<void> {
   try {
+    const type = props.type;
+    let credit: string | null = null;
+    let debit: string | null = null;
+    switch (type) {
+      case 'credit':
+        credit = evt.accountId;
+        break;
+      case 'debit':
+        debit = evt.accountId;
+        break;
+      default:
+        throw new Error(`type ${type} is not handled`);
+    }
+
     await expenseStore.addExpense(
       evt.date,
-      evt.accountId,
+      credit,
+      debit,
       evt.categoryId,
       evt.amount,
       evt.description,

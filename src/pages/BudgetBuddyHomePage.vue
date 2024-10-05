@@ -4,11 +4,7 @@
       <TimeIntervalSlideItem></TimeIntervalSlideItem>
       <div class="row col-12 justify-center">
         <q-btn :draggable="false" color="grey-4" outline padding="sm xl">
-          <ExpenseValue
-            :amount="amount"
-            currency=""
-            :type="amountType"
-          ></ExpenseValue>
+          <ExpenseValue :amount="amount" currency=""></ExpenseValue>
         </q-btn>
       </div>
       <div class="row col-12 justify-center">
@@ -51,7 +47,6 @@ import { computed } from 'vue';
 import ExpenseUtil from 'src/utils/expense-util';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import ExpenseValue from 'src/components/expenses/ExpenseValue.vue';
-import BigDecimalUtil from 'src/utils/big-decimal-util';
 import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
 
 defineOptions({
@@ -62,23 +57,7 @@ const intervalStore = useIntervalStore();
 const expenseStore = useExpenseStore();
 const router = useRouter();
 
-const amountRaw = computed(() => {
-  const credit = ExpenseUtil.sum(
-    expenses.value.filter((e) => e.category.type === 'credit'),
-  );
-  const debit = ExpenseUtil.sum(
-    expenses.value.filter((e) => e.category.type === 'debit'),
-  );
-  return credit.subtract(debit);
-});
-
-const amount = computed(() => {
-  return amountRaw.value.getValue();
-});
-
-const amountType = computed(() =>
-  amountRaw.value.compareTo(BigDecimalUtil.ZERO) >= 0 ? 'credit' : 'debit',
-);
+const amount = computed(() => ExpenseUtil.sum(expenses.value));
 
 const expenses = computed(() =>
   expenseStore.expensesInInterval(intervalStore.from, intervalStore.to),
