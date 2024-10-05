@@ -2,9 +2,6 @@
 
 # P0
 
-- Modifica spesa
-- Elimina spesa
-
 # P1
 
 - Selezionare colore categoria

@@ -1,5 +1,8 @@
 <template>
   <q-page class="row content-start justify-evenly">
+    <div class="col-12 text-h6 row justify-between q-pa-md">
+      <span>Add expense</span>
+    </div>
     <ExpenseEntryEditor
       :type="type"
       :add-mode="true"

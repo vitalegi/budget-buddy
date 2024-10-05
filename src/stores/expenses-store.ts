@@ -284,6 +284,12 @@ export const useExpenseStore = defineStore('expense', {
       return out;
     },
 
+    async deleteExpense(expenseId: string): Promise<void> {
+      await db.expenses.delete(expenseId);
+      const index = this.structuredEntries.findIndex((e) => e.id === expenseId);
+      this.structuredEntries.splice(index, 1);
+    },
+
     async loadCategories(entries: Category[]): Promise<void> {
       entries.forEach((entry) => this.categoriesMap.set(entry.id, entry));
     },

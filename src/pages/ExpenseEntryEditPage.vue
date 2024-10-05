@@ -1,5 +1,15 @@
 <template>
   <q-page class="row content-start justify-evenly">
+    <div class="col-12 text-h6 row justify-between q-pa-md">
+      <span>Update expense</span>
+      <q-btn
+        round
+        outline
+        color="primary"
+        icon="delete"
+        @click="deleteExpense()"
+      />
+    </div>
     <ExpenseEntryEditor
       v-if="expense"
       :add-mode="false"
@@ -55,6 +65,14 @@ async function update(evt: {
       evt.amount,
       evt.description,
     );
+    router.push('/');
+  } catch (e) {
+    Notify.create('Error: ' + e);
+  }
+}
+async function deleteExpense(): Promise<void> {
+  try {
+    await expenseStore.deleteExpense(props.expenseId);
     router.push('/');
   } catch (e) {
     Notify.create('Error: ' + e);

@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="fixed-bottom row justify-evenly">
+    <div class="fixed-bottom row justify-evenly q-pb-md">
       <div
         class="col-12 row items-center justify-evenly"
         style="max-width: 600px"
@@ -95,7 +95,7 @@ function addDebit() {
 
 <style scoped lang="scss">
 .main-content {
-  max-height: calc(100vh - 175px);
+  max-height: calc(100vh - 191px);
   overflow: auto;
 }
 
