@@ -163,6 +163,17 @@ export const useExpenseStore = defineStore('expense', {
         );
       };
     },
+    category(state) {
+      return (id: string): Category => {
+        const entries = Array.from(state.categoriesMap.values()).filter(
+          (e) => e.id === id,
+        );
+        if (entries.length === 0) {
+          throw new Error(`No category with id ${id}`);
+        }
+        return entries[0];
+      };
+    },
     expensesInInterval(state) {
       return (from: Date, to: Date) => {
         return state.structuredEntries

@@ -2,11 +2,12 @@
 
 # P0
 
+- Import dati
+
 # P1
 
 - Selezionare colore categoria
 - Selezionare icona categoria
-- Import dati
 
 # P2
 
@@ -16,3 +17,5 @@
 - Visualizzare grafico spese
 - Visualizzare andamento spese
 - Salvataggio backend
+- Tracciare storico modifiche
+- editor con tastierino numerico per importi

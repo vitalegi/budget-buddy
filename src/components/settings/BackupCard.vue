@@ -1,16 +1,14 @@
 <template>
-  <q-form @submit="exportFile" class="col-12 q-gutter-y-md" greedy>
-    <q-card>
-      <q-card-section>
-        <q-btn
-          class="full-width"
-          color="primary"
-          label="Export"
-          type="submit"
-        />
-      </q-card-section>
-    </q-card>
-  </q-form>
+  <q-card @click="exportFile()" class="col-12 q-gutter-y-md">
+    <q-card-section>
+      <q-btn
+        class="full-width"
+        color="primary"
+        label="Backup to file"
+        type="submit"
+      />
+    </q-card-section>
+  </q-card>
 </template>
 <script setup lang="ts">
 import { format } from 'date-fns';
