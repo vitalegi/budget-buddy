@@ -7,7 +7,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import ExpenseEntryEditor from 'src/components/ExpenseEntryEditor.vue';
+import ExpenseEntryEditor from 'src/components/expenses/ExpenseEntryEditor.vue';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import { computed } from 'vue';
 

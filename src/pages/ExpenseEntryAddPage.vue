@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 import { Notify } from 'quasar';
-import ExpenseEntryEditor from 'src/components/ExpenseEntryEditor.vue';
+import ExpenseEntryEditor from 'src/components/expenses/ExpenseEntryEditor.vue';
 import { ExpenseType } from 'src/model/expense-type';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import { useRouter } from 'vue-router';

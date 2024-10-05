@@ -44,13 +44,13 @@
 </template>
 
 <script setup lang="ts">
-import ExpensesByCategories from 'components/ExpensesByCategories.vue';
+import ExpensesByCategories from 'components/expenses/ExpensesByCategories.vue';
 import { useIntervalStore } from 'src/stores/interval-store';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
 import ExpenseUtil from 'src/utils/expense-util';
 import { useExpenseStore } from 'src/stores/expenses-store';
-import ExpenseValue from 'src/components/ExpenseValue.vue';
+import ExpenseValue from 'src/components/expenses/ExpenseValue.vue';
 import BigDecimalUtil from 'src/utils/big-decimal-util';
 import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
 

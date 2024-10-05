@@ -58,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import AccountsVerticalEditor from 'src/components/AccountsVerticalEditor.vue';
-import CategoriesVerticalEditor from 'src/components/CategoriesVerticalEditor.vue';
+import AccountsVerticalEditor from 'src/components/accounts/AccountsVerticalEditor.vue';
+import CategoriesVerticalEditor from 'src/components/categories/CategoriesVerticalEditor.vue';
 import SettingsList from 'src/components/settings/SettingsList.vue';
 import TimeIntervalSelector from 'src/components/TimeIntervalSelector.vue';
 import { ref } from 'vue';

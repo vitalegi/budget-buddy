@@ -23,12 +23,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import DateSelector from './DateSelector.vue';
+import DateSelector from '../DateSelector.vue';
 import { ExpenseType } from 'src/model/expense-type';
 import DateUtil from 'src/utils/date-util';
-import AccountSelector from './AccountSelector.vue';
-import CategorySelector from './CategorySelector.vue';
-import AmountSelector from './AmountSelector.vue';
+import AccountSelector from '../accounts/AccountSelector.vue';
+import CategorySelector from '../categories/CategorySelector.vue';
+import AmountSelector from '../AmountSelector.vue';
 import { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 import { format, parse } from 'date-fns';
 

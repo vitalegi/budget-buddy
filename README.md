@@ -1,8 +1,11 @@
 # Budget Buddy
 
-A Quasar Project
+Budget utility PWA developed with speed, portability and offline mode features in mind.
+
+No advertisements or tracking cookies.
 
 ## Install the dependencies
+
 ```bash
 yarn
 # or
@@ -15,7 +18,6 @@ npm install
 quasar dev -m pwa
 ```
 
-
 ### Lint the files
 
 ```bash
@@ -23,7 +25,6 @@ yarn lint
 # or
 npm run lint
 ```
-
 
 ### Format the files
 
@@ -33,13 +34,12 @@ yarn format
 npm run format
 ```
 
-
-
 ### Build the app for production
 
 ```bash
-quasar build
+quasar build -m pwa
 ```
 
 ### Customize the configuration
+
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
