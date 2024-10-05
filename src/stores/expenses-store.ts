@@ -89,8 +89,8 @@ class CategoryUtil {
 
 class ExpenseUtil {
   public static createDto(
+    id: string | null,
     date: string,
-    expenseType: ExpenseType,
     accountId: string,
     categoryId: string,
     amount: string,
@@ -134,7 +134,6 @@ class ExpenseUtil {
 export const useExpenseStore = defineStore('expense', {
   state: () => ({
     structuredEntries: new Array<Expense>(),
-    expensesList: new Array<ExpenseDto>(),
     categoriesMap: new Map<string, Category>(),
     accountsMap: new Map<string, Account>(),
   }),
@@ -240,15 +239,14 @@ export const useExpenseStore = defineStore('expense', {
     },
     async addExpense(
       date: string,
-      expenseType: ExpenseType,
       accountId: string,
       categoryId: string,
       amount: string,
       description: string,
     ): Promise<Expense> {
       const dto = ExpenseUtil.createDto(
+        null,
         date,
-        expenseType,
         accountId,
         categoryId,
         amount,
@@ -256,8 +254,33 @@ export const useExpenseStore = defineStore('expense', {
       );
       const out = ExpenseUtil.build(dto, this.categoriesMap, this.accountsMap);
       await db.expenses.add(dto);
-      this.expensesList.push(dto);
       this.structuredEntries.push(out);
+      return out;
+    },
+    async updateExpense(
+      expenseId: string,
+      date: string,
+      accountId: string,
+      categoryId: string,
+      amount: string,
+      description: string,
+    ): Promise<Expense> {
+      const entry = ExpenseUtil.createDto(
+        expenseId,
+        date,
+        accountId,
+        categoryId,
+        amount,
+        description,
+      );
+      await db.expenses.update(expenseId, entry);
+      const index = this.structuredEntries.findIndex((e) => e.id === expenseId);
+      const out = ExpenseUtil.build(
+        entry,
+        this.categoriesMap,
+        this.accountsMap,
+      );
+      this.structuredEntries.splice(index, 1, out);
       return out;
     },
 
@@ -271,7 +294,6 @@ export const useExpenseStore = defineStore('expense', {
       const out = entries.map((e) =>
         ExpenseUtil.build(e, this.categoriesMap, this.accountsMap),
       );
-      this.expensesList.push(...entries);
       this.structuredEntries.push(...out);
     },
     async export(): Promise<{

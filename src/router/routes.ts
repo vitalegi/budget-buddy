@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
         props: true,
       },
       {
-        path: '/edit/:id',
+        path: '/edit/:expenseId',
         component: () => import('pages/ExpenseEntryEditPage.vue'),
         props: true,
       },

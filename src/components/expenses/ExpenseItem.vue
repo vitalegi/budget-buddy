@@ -3,7 +3,7 @@
     <q-item-section avatar top> </q-item-section>
 
     <q-item-section top>
-      <q-item-label>
+      <q-item-label @click="openEditor">
         <ExpenseValue
           :amount="expense.amount"
           :currency="expense.account.currency"
@@ -27,6 +27,7 @@ import Expense from 'src/model/expense';
 import ExpenseValue from './ExpenseValue.vue';
 import { computed } from 'vue';
 import { format } from 'date-fns';
+import { useRouter } from 'vue-router';
 
 interface Props {
   expense: Expense;
@@ -35,4 +36,10 @@ interface Props {
 const dateLabel = computed(() => format(props.expense.date, 'd LLL'));
 
 const props = defineProps<Props>();
+
+const router = useRouter();
+
+function openEditor() {
+  router.push(`/edit/${props.expense.id}`);
+}
 </script>

@@ -12,7 +12,7 @@
     <AmountSelector v-model="amount" />
 
     <q-btn
-      label="Add"
+      :label="submitButtonLabel"
       type="submit"
       color="primary"
       size="24px"
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import DateSelector from '../DateSelector.vue';
 import { ExpenseType } from 'src/model/expense-type';
 import DateUtil from 'src/utils/date-util';
@@ -34,7 +34,7 @@ import { format, parse } from 'date-fns';
 
 interface Props {
   type: ExpenseType;
-  expenseId?: string;
+  addMode: boolean;
   oldDate?: string;
   oldAccountId?: string;
   oldCategoryId?: string;
@@ -51,6 +51,13 @@ const accountId = ref<string>('');
 const categoryId = ref<string>('');
 const description = ref<string>('');
 const amount = ref<string>('');
+
+const submitButtonLabel = computed(() => {
+  if (props.addMode) {
+    return 'Add';
+  }
+  return 'Save';
+});
 
 function onSubmit() {
   const mappedDate = convertDate(

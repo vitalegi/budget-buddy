@@ -1,6 +1,10 @@
 <template>
   <q-page class="row content-start justify-evenly">
-    <ExpenseEntryEditor :type="type" @submit="add"></ExpenseEntryEditor>
+    <ExpenseEntryEditor
+      :type="type"
+      :add-mode="true"
+      @submit="add"
+    ></ExpenseEntryEditor>
   </q-page>
 </template>
 <script setup lang="ts">
@@ -14,7 +18,7 @@ interface Props {
   type: ExpenseType;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const expenseStore = useExpenseStore();
 
@@ -30,7 +34,6 @@ async function add(evt: {
   try {
     await expenseStore.addExpense(
       evt.date,
-      props.type,
       evt.accountId,
       evt.categoryId,
       evt.amount,
