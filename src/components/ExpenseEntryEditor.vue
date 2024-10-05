@@ -58,12 +58,11 @@ function onSubmit() {
     DateUtil.Q_DATE_FORMAT,
     EXPENSE_DATE_FORMAT,
   );
-
   emit('submit', {
     date: mappedDate,
     accountId: accountId.value,
     categoryId: categoryId.value,
-    description: description.value,
+    description: description.value.trim(),
     amount: amount.value,
   });
 }

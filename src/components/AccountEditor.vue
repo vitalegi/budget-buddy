@@ -88,7 +88,7 @@ function save(): void {
   if (props.id !== '') {
     expenseStore.updateAccount(
       editor.value.id,
-      editor.value.name,
+      editor.value.name.trim(),
       editor.value.currency,
       editor.value.active,
       editor.value.icon,
@@ -96,7 +96,7 @@ function save(): void {
     );
   } else {
     expenseStore.addAccount(
-      editor.value.name,
+      editor.value.name.trim(),
       editor.value.currency,
       editor.value.active,
       editor.value.icon,

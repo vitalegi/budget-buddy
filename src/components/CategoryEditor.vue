@@ -104,7 +104,7 @@ function save(): void {
   if (props.id !== '') {
     expenseStore.updateCategory(
       editor.value.id,
-      editor.value.name,
+      editor.value.name.trim(),
       editor.value.active,
       editor.value.type,
       editor.value.icon,
@@ -112,7 +112,7 @@ function save(): void {
     );
   } else {
     expenseStore.addCategory(
-      editor.value.name,
+      editor.value.name.trim(),
       editor.value.active,
       editor.value.type,
       editor.value.icon,
