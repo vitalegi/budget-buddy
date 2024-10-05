@@ -274,6 +274,20 @@ export const useExpenseStore = defineStore('expense', {
       this.expensesList.push(...entries);
       this.structuredEntries.push(...out);
     },
+    async export(): Promise<{
+      categories: Category[];
+      accounts: Account[];
+      expenses: ExpenseDto[];
+    }> {
+      const categories = await db.categories.toArray();
+      const accounts = await db.accounts.toArray();
+      const expenses = await db.expenses.toArray();
+      return {
+        categories: categories,
+        accounts: accounts,
+        expenses: expenses,
+      };
+    },
   },
 });
 

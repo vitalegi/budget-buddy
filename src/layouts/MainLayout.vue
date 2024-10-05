@@ -41,6 +41,12 @@
             </template>
             <AccountsVerticalEditor></AccountsVerticalEditor>
           </q-expansion-item>
+          <q-expansion-item expand-separator label="Accounts">
+            <template v-slot:header>
+              <q-item-section> Settings </q-item-section>
+            </template>
+            <SettingsList></SettingsList>
+          </q-expansion-item>
         </q-list>
       </div>
     </q-drawer>
@@ -54,6 +60,7 @@
 <script setup lang="ts">
 import AccountsVerticalEditor from 'src/components/AccountsVerticalEditor.vue';
 import CategoriesVerticalEditor from 'src/components/CategoriesVerticalEditor.vue';
+import SettingsList from 'src/components/settings/SettingsList.vue';
 import TimeIntervalSelector from 'src/components/TimeIntervalSelector.vue';
 import { ref } from 'vue';
 

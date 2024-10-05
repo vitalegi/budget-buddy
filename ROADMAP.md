@@ -2,7 +2,6 @@
 
 # P0
 
-- Export dati
 - Modifica spesa
 - Elimina spesa
 
