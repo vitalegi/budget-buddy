@@ -4,10 +4,7 @@
 
     <q-item-section top>
       <q-item-label @click="openEditor">
-        <ExpenseValue
-          :amount="amount"
-          :currency="expense.credit?.currency || 'TODO'"
-        ></ExpenseValue>
+        <ExpenseValue :amount="amount" :currency="currency"></ExpenseValue>
         &nbsp; &nbsp; &nbsp;
         <span class="text-grey-8"> {{ expense.description }}</span>
       </q-item-label>
@@ -40,6 +37,16 @@ const props = defineProps<Props>();
 const router = useRouter();
 
 const amount = computed(() => new bigDecimal(props.expense.amount));
+
+const currency = computed(() => {
+  if (props.expense.debit) {
+    return props.expense.debit.currency;
+  }
+  if (props.expense.credit) {
+    return props.expense.credit.currency;
+  }
+  return '';
+});
 
 function openEditor() {
   router.push(`/edit/${props.expense.id}`);

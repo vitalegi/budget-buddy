@@ -62,7 +62,7 @@ const editor = ref<{
   color: string;
 }>({
   id: '',
-  currency: 'EUR',
+  currency: '',
   name: '',
   active: true,
   icon: '',

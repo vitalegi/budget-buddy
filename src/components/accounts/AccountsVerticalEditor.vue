@@ -11,7 +11,7 @@
         <q-card-section>
           <AccountEditor
             id=""
-            currency="EUR"
+            currency=""
             name=""
             :active="true"
             icon=""

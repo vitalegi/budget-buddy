@@ -13,6 +13,7 @@ export default class Account {
     const out = new Account();
     out.id = JsonUtil.asString(obj.id);
     out.name = JsonUtil.asString(obj.name);
+    out.currency = JsonUtil.asString(obj.currency);
     out.active = JsonUtil.asBoolean(obj.active, false);
     out.icon = JsonUtil.asString(obj.icon, '');
     out.color = JsonUtil.asString(obj.color, '');
