@@ -14,13 +14,11 @@
 
     <q-drawer v-model="leftDrawerOpen" side="left" overlay bordered>
       <div class="row items-start justify-start q-px-md">
-        <q-select
+        <AccountSelector
+          v-model="accountId"
+          :allow-all="true"
           class="col-12 q-py-md"
-          color="secondary"
-          outlined
-          v-model="account"
-          :options="['Tutti gli account', 'CC 1', 'Prepagata', 'Contanti']"
-          label="Outlined"
+          @update:model-value="updateAccountId"
         />
         <div class="col-12 q-gutter-sm">
           <TimeIntervalSelector></TimeIntervalSelector>
@@ -64,10 +62,21 @@ import AccountsVerticalEditor from 'src/components/accounts/AccountsVerticalEdit
 import CategoriesVerticalEditor from 'src/components/categories/CategoriesVerticalEditor.vue';
 import SettingsList from 'src/components/settings/SettingsList.vue';
 import TimeIntervalSelector from 'src/components/TimeIntervalSelector.vue';
+import AccountSelector from 'src/components/accounts/AccountSelector.vue';
 import { ref } from 'vue';
+import { useAccountFilterStore } from 'src/stores/account-filter-store';
 
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
+
+const accountFilterStore = useAccountFilterStore();
+
+const accountId = ref(accountFilterStore.accountId);
+
+function updateAccountId(newAccountId: string) {
+  console.log(newAccountId);
+  accountFilterStore.setAccountId(newAccountId);
+}
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -76,6 +85,4 @@ function toggleLeftDrawer() {
 function toggleRightDrawer() {
   rightDrawerOpen.value = !rightDrawerOpen.value;
 }
-
-const account = ref('*');
 </script>

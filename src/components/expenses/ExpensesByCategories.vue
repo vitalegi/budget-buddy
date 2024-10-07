@@ -15,12 +15,18 @@ import { useIntervalStore } from 'src/stores/interval-store';
 import { computed } from 'vue';
 import ExpensesByCategory from './ExpensesByCategory.vue';
 import ExpenseUtil from 'src/utils/expense-util';
+import { useAccountFilterStore } from 'src/stores/account-filter-store';
 
 const intervalStore = useIntervalStore();
+const accountFilterStore = useAccountFilterStore();
 const expenseStore = useExpenseStore();
 
 const expenses = computed(() =>
-  expenseStore.expensesInInterval(intervalStore.from, intervalStore.to),
+  expenseStore.expensesInInterval(
+    intervalStore.from,
+    intervalStore.to,
+    accountFilterStore.accountId,
+  ),
 );
 
 const categories = computed(() => {

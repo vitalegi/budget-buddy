@@ -25,9 +25,10 @@ export const useExpenseStore = defineStore('expense', {
       };
     },
     expensesInInterval(state) {
-      return (from: Date, to: Date) => {
+      return (from: Date, to: Date, accountId: string) => {
         return state._entries
           .filter((e) => ExpenseUtil.inInterval(e.date, from, to))
+          .filter((e) => ExpenseUtil.matchesAccount(e, accountId))
           .sort((e1: Expense, e2: Expense) => {
             if (e1.date !== e2.date) {
               return e1.date > e2.date ? 1 : -1;

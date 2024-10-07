@@ -37,6 +37,7 @@ import ExpenseValue from './ExpenseValue.vue';
 import Expense from 'src/model/expense';
 import ExpenseUtil from 'src/utils/expense-util';
 import { useCategoryStore } from 'src/stores/categories-store';
+import { useAccountFilterStore } from 'src/stores/account-filter-store';
 
 interface Props {
   categoryId: string;
@@ -46,6 +47,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const categoryStore = useCategoryStore();
+const accountFilterStore = useAccountFilterStore();
 
 const category = computed(() => categoryStore.category(props.categoryId));
 
@@ -56,5 +58,7 @@ const expensesWithCategory = computed(() => {
   );
 });
 
-const amount = computed(() => ExpenseUtil.sum(expensesWithCategory.value));
+const amount = computed(() =>
+  ExpenseUtil.sum(expensesWithCategory.value, accountFilterStore.accountId),
+);
 </script>

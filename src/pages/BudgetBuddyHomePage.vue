@@ -48,19 +48,27 @@ import ExpenseUtil from 'src/utils/expense-util';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import ExpenseValue from 'src/components/expenses/ExpenseValue.vue';
 import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
+import { useAccountFilterStore } from 'src/stores/account-filter-store';
 
 defineOptions({
   name: 'BudgetBuddyHomePage',
 });
 
 const intervalStore = useIntervalStore();
+const accountFilterStore = useAccountFilterStore();
 const expenseStore = useExpenseStore();
 const router = useRouter();
 
-const amount = computed(() => ExpenseUtil.sum(expenses.value));
+const amount = computed(() =>
+  ExpenseUtil.sum(expenses.value, accountFilterStore.accountId),
+);
 
 const expenses = computed(() =>
-  expenseStore.expensesInInterval(intervalStore.from, intervalStore.to),
+  expenseStore.expensesInInterval(
+    intervalStore.from,
+    intervalStore.to,
+    accountFilterStore.accountId,
+  ),
 );
 
 function addCredit() {

@@ -6,7 +6,7 @@
     greedy
   >
     <DateSelector v-model="qDate" :mask="DateUtil.Q_DATE_MASK" />
-    <AccountSelector v-model="accountId" />
+    <AccountSelector v-model="accountId" :allow-all="false" />
     <CategorySelector v-model="categoryId" :type="type" />
     <q-input outlined v-model="description" label="Description" />
     <AmountSelector v-model="amount" />

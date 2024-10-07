@@ -6,42 +6,25 @@ import MapUtil from './map.util';
 import { format } from 'date-fns';
 
 export default class ExpenseUtil {
-  public static sum(expenses: Expense[]): bigDecimal {
-    let amount = BigDecimalUtil.ZERO;
-    for (const expense of expenses) {
-      if (expense.isCredit()) {
-        amount = amount.add(new bigDecimal(expense.amount));
-      }
-      if (expense.isDebit()) {
-        amount = amount.subtract(new bigDecimal(expense.amount));
-      }
-      if (expense.isTransfer()) {
-        // TODO
-      }
-    }
-    return amount;
-  }
+  public static ACCOUNT_ALL = 'ALL';
 
-  public static sumCredits(expenses: Expense[]): bigDecimal {
+  public static sum(expenses: Expense[], accountId: string): bigDecimal {
     let amount = BigDecimalUtil.ZERO;
     for (const expense of expenses) {
+      const newValue = new bigDecimal(expense.amount);
       if (expense.isCredit()) {
-        amount = amount.add(new bigDecimal(expense.amount));
+        amount = amount.add(newValue);
       }
-      if (expense.isTransfer()) {
-        // TODO
-      }
-    }
-    return amount;
-  }
-  public static sumDebits(expenses: Expense[]): bigDecimal {
-    let amount = BigDecimalUtil.ZERO;
-    for (const expense of expenses) {
       if (expense.isDebit()) {
-        amount = amount.subtract(new bigDecimal(expense.amount));
+        amount = amount.subtract(newValue);
       }
       if (expense.isTransfer()) {
-        // TODO
+        if (accountId === expense.credit?.id) {
+          amount = amount.add(newValue);
+        }
+        if (accountId === expense.debit?.id) {
+          amount = amount.subtract(newValue);
+        }
       }
     }
     return amount;
@@ -52,6 +35,13 @@ export default class ExpenseUtil {
       format(from, EXPENSE_DATE_FORMAT) <= date &&
       date <= format(to, EXPENSE_DATE_FORMAT)
     );
+  }
+
+  public static matchesAccount(expense: Expense, accountId: string): boolean {
+    if (accountId === ExpenseUtil.ACCOUNT_ALL) {
+      return true;
+    }
+    return expense.credit?.id === accountId || expense.debit?.id === accountId;
   }
 
   public static filterByCategory(

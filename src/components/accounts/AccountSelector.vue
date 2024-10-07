@@ -15,11 +15,26 @@
 
 <script setup lang="ts">
 import { useAccountStore } from 'src/stores/accounts-store';
+import ExpenseUtil from 'src/utils/expense-util';
 import { computed } from 'vue';
 
 const model = defineModel<string>();
 
+interface Props {
+  allowAll: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  allowAll: false,
+});
+
 const accountStore = useAccountStore();
 
-const accounts = computed(() => accountStore.accounts.filter((a) => a.active));
+const accounts = computed((): Array<{ id: string; name: string }> => {
+  const list = accountStore.accounts.filter((a) => a.active);
+  if (props.allowAll) {
+    return [{ id: ExpenseUtil.ACCOUNT_ALL, name: 'All accounts' }, ...list];
+  }
+  return list;
+});
 </script>
