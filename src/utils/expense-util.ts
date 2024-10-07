@@ -22,6 +22,31 @@ export default class ExpenseUtil {
     return amount;
   }
 
+  public static sumCredits(expenses: Expense[]): bigDecimal {
+    let amount = BigDecimalUtil.ZERO;
+    for (const expense of expenses) {
+      if (expense.isCredit()) {
+        amount = amount.add(new bigDecimal(expense.amount));
+      }
+      if (expense.isTransfer()) {
+        // TODO
+      }
+    }
+    return amount;
+  }
+  public static sumDebits(expenses: Expense[]): bigDecimal {
+    let amount = BigDecimalUtil.ZERO;
+    for (const expense of expenses) {
+      if (expense.isDebit()) {
+        amount = amount.subtract(new bigDecimal(expense.amount));
+      }
+      if (expense.isTransfer()) {
+        // TODO
+      }
+    }
+    return amount;
+  }
+
   public static inInterval(date: string, from: Date, to: Date): boolean {
     return (
       format(from, EXPENSE_DATE_FORMAT) <= date &&

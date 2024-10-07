@@ -19,20 +19,11 @@
       label="Active"
       @update:model-value="update()"
     />
-    <q-input
-      outlined
-      v-model="editor.icon"
-      label="Icon"
-      @update:model-value="update()"
-      debounce="400"
-    />
-    <q-input
-      outlined
-      v-model="editor.color"
-      label="Color"
-      @update:model-value="update()"
-      debounce="400"
-    />
+    <IconSelector
+      :icon="editor.icon"
+      :color="editor.color"
+      @change="changeIcon"
+    ></IconSelector>
     <q-btn
       v-if="addMode"
       @click="save()"
@@ -46,6 +37,8 @@
 <script setup lang="ts">
 import { useAccountStore } from 'src/stores/accounts-store';
 import { computed, onMounted, ref } from 'vue';
+import IconSelector from '../IconSelector.vue';
+import { randomIcon } from 'src/model/icon';
 
 const accountStore = useAccountStore();
 
@@ -76,6 +69,12 @@ const editor = ref<{
   color: '',
 });
 const addMode = computed(() => props.id === '');
+
+async function changeIcon(event: { icon: string; color: string }) {
+  editor.value.icon = event.icon;
+  editor.value.color = event.color;
+  update();
+}
 
 function update(): void {
   if (addMode.value) {
@@ -123,6 +122,11 @@ onMounted(() => {
   }
   if (props.color) {
     editor.value.color = props.color;
+  }
+  if (editor.value.icon === '') {
+    const baseIcon = randomIcon();
+    editor.value.icon = baseIcon.icon;
+    editor.value.color = baseIcon.color;
   }
 });
 </script>

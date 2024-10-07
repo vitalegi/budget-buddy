@@ -1,7 +1,7 @@
 <template>
-  <q-list bordered class="rounded-borders">
+  <q-list bordered class="rounded-borders" v-if="expenses.length > 0">
     <ExpensesByCategory
-      :category="category"
+      :categoryId="category.id"
       :expenses="expenses"
       v-for="category in categories"
       :key="category.id"

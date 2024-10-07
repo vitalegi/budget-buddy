@@ -8,7 +8,7 @@
           Budget Buddy
         </q-toolbar-title>
 
-        <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
+        <q-btn dense flat round icon="settings" @click="toggleRightDrawer" />
       </q-toolbar>
     </q-header>
 

@@ -2,12 +2,10 @@
 
 # P0
 
-- Import dati
+- Selezionare account
+- Gestire transfer tra account
 
 # P1
-
-- Selezionare colore categoria
-- Selezionare icona categoria
 
 # P2
 

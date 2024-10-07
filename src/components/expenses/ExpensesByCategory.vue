@@ -2,7 +2,11 @@
   <q-expansion-item dense switch-toggle-side expand-separator>
     <template v-slot:header>
       <q-item-section avatar>
-        <q-avatar icon="perm_identity" color="primary" text-color="white" />
+        <q-avatar
+          :icon="category.icon"
+          :color="category.color"
+          text-color="white"
+        />
       </q-item-section>
 
       <q-item-section>
@@ -27,23 +31,27 @@
 </template>
 
 <script setup lang="ts">
-import Category from 'src/model/category';
 import { computed } from 'vue';
 import ExpenseItem from './ExpenseItem.vue';
 import ExpenseValue from './ExpenseValue.vue';
 import Expense from 'src/model/expense';
 import ExpenseUtil from 'src/utils/expense-util';
+import { useCategoryStore } from 'src/stores/categories-store';
 
 interface Props {
-  category: Category;
+  categoryId: string;
   expenses: Expense[];
 }
 
 const props = defineProps<Props>();
 
+const categoryStore = useCategoryStore();
+
+const category = computed(() => categoryStore.category(props.categoryId));
+
 const expensesWithCategory = computed(() => {
   return ExpenseUtil.sortExpensesByDate(
-    ExpenseUtil.filterByCategory(props.expenses, props.category.id),
+    ExpenseUtil.filterByCategory(props.expenses, props.categoryId),
     false,
   );
 });

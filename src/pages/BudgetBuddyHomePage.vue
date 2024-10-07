@@ -1,8 +1,8 @@
 <template>
   <q-page class="row content-start justify-evenly">
     <div class="main-content col-12">
-      <TimeIntervalSlideItem></TimeIntervalSlideItem>
-      <div class="row col-12 justify-center">
+      <TimeIntervalSlideItem class="q-mb-sm"></TimeIntervalSlideItem>
+      <div class="row col-12 justify-center q-mb-sm">
         <q-btn :draggable="false" color="grey-4" outline padding="sm xl">
           <ExpenseValue :amount="amount" currency=""></ExpenseValue>
         </q-btn>
