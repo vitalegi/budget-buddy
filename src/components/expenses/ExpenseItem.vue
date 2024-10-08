@@ -24,7 +24,8 @@ import ExpenseValue from './ExpenseValue.vue';
 import { computed } from 'vue';
 import { format } from 'date-fns';
 import { useRouter } from 'vue-router';
-import bigDecimal from 'js-big-decimal';
+import ExpenseUtil from 'src/utils/expense-util';
+import { useAccountFilterStore } from 'src/stores/account-filter-store';
 
 interface Props {
   expense: Expense;
@@ -35,8 +36,7 @@ const dateLabel = computed(() => format(props.expense.date, 'd LLL'));
 const props = defineProps<Props>();
 
 const router = useRouter();
-
-const amount = computed(() => new bigDecimal(props.expense.amount));
+const accountFilterStore = useAccountFilterStore();
 
 const currency = computed(() => {
   if (props.expense.debit) {
@@ -46,6 +46,11 @@ const currency = computed(() => {
     return props.expense.credit.currency;
   }
   return '';
+});
+
+const amount = computed(() => {
+  const accountId = accountFilterStore.accountId;
+  return ExpenseUtil.amountWithSign(props.expense, accountId);
 });
 
 function openEditor() {

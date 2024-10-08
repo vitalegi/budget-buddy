@@ -60,7 +60,7 @@ const expenseStore = useExpenseStore();
 const router = useRouter();
 
 const amount = computed(() =>
-  ExpenseUtil.sum(expenses.value, accountFilterStore.accountId),
+  ExpenseUtil.amountsWithSign(expenses.value, accountFilterStore.accountId),
 );
 
 const expenses = computed(() =>

@@ -2,15 +2,11 @@
   <q-expansion-item dense switch-toggle-side expand-separator>
     <template v-slot:header>
       <q-item-section avatar>
-        <q-avatar
-          :icon="category.icon"
-          :color="category.color"
-          text-color="white"
-        />
+        <q-avatar :icon="icon" :color="color" text-color="white" />
       </q-item-section>
 
       <q-item-section>
-        {{ category.name }}
+        {{ label }}
       </q-item-section>
 
       <q-item-section side>
@@ -21,7 +17,7 @@
     </template>
 
     <ExpenseItem
-      v-for="expense in expensesWithCategory"
+      v-for="expense in expenses"
       :key="expense.id"
       :expense="expense"
       dense
@@ -31,34 +27,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import ExpenseItem from './ExpenseItem.vue';
 import ExpenseValue from './ExpenseValue.vue';
 import Expense from 'src/model/expense';
-import ExpenseUtil from 'src/utils/expense-util';
-import { useCategoryStore } from 'src/stores/categories-store';
-import { useAccountFilterStore } from 'src/stores/account-filter-store';
+import bigDecimal from 'js-big-decimal';
 
 interface Props {
   categoryId: string;
+  label: string;
+  icon: string;
+  color: string;
+
   expenses: Expense[];
+  amount: bigDecimal;
 }
 
-const props = defineProps<Props>();
-
-const categoryStore = useCategoryStore();
-const accountFilterStore = useAccountFilterStore();
-
-const category = computed(() => categoryStore.category(props.categoryId));
-
-const expensesWithCategory = computed(() => {
-  return ExpenseUtil.sortExpensesByDate(
-    ExpenseUtil.filterByCategory(props.expenses, props.categoryId),
-    false,
-  );
-});
-
-const amount = computed(() =>
-  ExpenseUtil.sum(expensesWithCategory.value, accountFilterStore.accountId),
-);
+defineProps<Props>();
 </script>

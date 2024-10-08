@@ -2,7 +2,6 @@
 
 # P0
 
-- Selezionare account
 - Gestire transfer tra account
 
 # P1

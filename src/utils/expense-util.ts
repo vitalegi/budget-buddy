@@ -2,32 +2,43 @@ import bigDecimal from 'js-big-decimal';
 import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 import BigDecimalUtil from './big-decimal-util';
 import Category from 'src/model/category';
-import MapUtil from './map.util';
 import { format } from 'date-fns';
+import { CategoryWithExpenses } from 'src/model/categories';
 
 export default class ExpenseUtil {
   public static ACCOUNT_ALL = 'ALL';
 
-  public static sum(expenses: Expense[], accountId: string): bigDecimal {
+  public static amountsWithSign(
+    expenses: Expense[],
+    accountId: string,
+  ): bigDecimal {
     let amount = BigDecimalUtil.ZERO;
     for (const expense of expenses) {
-      const newValue = new bigDecimal(expense.amount);
-      if (expense.isCredit()) {
-        amount = amount.add(newValue);
-      }
-      if (expense.isDebit()) {
-        amount = amount.subtract(newValue);
-      }
-      if (expense.isTransfer()) {
-        if (accountId === expense.credit?.id) {
-          amount = amount.add(newValue);
-        }
-        if (accountId === expense.debit?.id) {
-          amount = amount.subtract(newValue);
-        }
-      }
+      const value = ExpenseUtil.amountWithSign(expense, accountId);
+      amount = amount.add(value);
     }
     return amount;
+  }
+
+  public static amountWithSign(
+    expense: Expense,
+    accountId: string,
+  ): bigDecimal {
+    const value = new bigDecimal(expense.amount);
+    if (expense.isCredit()) {
+      return value;
+    } else if (expense.isDebit()) {
+      return value.negate();
+    } else if (expense.isTransfer()) {
+      if (accountId === expense.credit?.id) {
+        return value;
+      }
+      if (accountId === expense.debit?.id) {
+        return value.negate();
+      }
+      return BigDecimalUtil.ZERO;
+    }
+    throw new Error(`Amount is not supported on ${JSON.stringify(expense)}`);
   }
 
   public static inInterval(date: string, from: Date, to: Date): boolean {
@@ -65,26 +76,12 @@ export default class ExpenseUtil {
   }
 
   public static sortCategoriesByAmount(
-    expenses: Expense[],
+    categories: CategoryWithExpenses[],
     asc: boolean,
-  ): Category[] {
-    const categories = ExpenseUtil.getCategories(expenses);
-    const map = new Map<string, bigDecimal>();
-    expenses.forEach((e) => {
-      if (!e.category) {
-        return;
-      }
-      let entry = map.get(e.category.id);
-      if (entry === undefined) {
-        entry = BigDecimalUtil.ZERO;
-      }
-      map.set(e.category.id, entry.add(new bigDecimal(e.amount)));
-    });
+  ): CategoryWithExpenses[] {
     const multiplier = asc ? 1 : -1;
     return categories.sort((c1, c2) => {
-      const v1 = MapUtil.getOrDefault(map, c1.id, BigDecimalUtil.ZERO);
-      const v2 = MapUtil.getOrDefault(map, c2.id, BigDecimalUtil.ZERO);
-      return multiplier * v1.compareTo(v2);
+      return multiplier * c1.amount.compareTo(c2.amount);
     });
   }
 
