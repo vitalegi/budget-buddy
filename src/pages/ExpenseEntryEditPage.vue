@@ -10,8 +10,18 @@
         @click="deleteExpense()"
       />
     </div>
+    <ExpenseEntryTransferEditor
+      v-if="type === 'transfer'"
+      :add-mode="false"
+      @submit="update"
+      :oldDate="expense.date"
+      :oldCreditAccountId="creditId"
+      :oldDebitAccountId="debitId"
+      :oldDescription="expense.description"
+      :oldAmount="expense.amount"
+    />
     <ExpenseEntryEditor
-      v-if="expense"
+      v-if="type === 'credit' || type === 'debit'"
       :add-mode="false"
       :type="type"
       :oldDate="expense.date"
@@ -20,12 +30,14 @@
       :oldDescription="expense.description"
       :oldAmount="expense.amount"
       @submit="update"
-    ></ExpenseEntryEditor>
+    />
   </q-page>
 </template>
 <script setup lang="ts">
 import { Notify } from 'quasar';
 import ExpenseEntryEditor from 'src/components/expenses/ExpenseEntryEditor.vue';
+import ExpenseEntryTransferEditor from 'src/components/expenses/ExpenseEntryTransferEditor.vue';
+import Expense from 'src/model/expense';
 import { ExpenseType } from 'src/model/expense-type';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import { computed } from 'vue';
@@ -46,22 +58,22 @@ const expense = computed(() => {
   try {
     return expenseStore.expense(props.expenseId);
   } catch (e) {
-    return null;
+    return new Expense();
   }
 });
 
 const creditId = computed(() => {
-  if (expense.value?.credit) {
+  if (expense.value.credit) {
     return expense.value.credit.id;
   }
-  return null;
+  return undefined;
 });
 
 const debitId = computed(() => {
   if (expense.value?.debit) {
     return expense.value.debit.id;
   }
-  return null;
+  return undefined;
 });
 
 const accountId = computed(() => {
@@ -74,44 +86,39 @@ const accountId = computed(() => {
   return undefined;
 });
 
-const type = computed((): ExpenseType => {
+const type = computed((): ExpenseType | undefined => {
   const value = expense.value;
   if (value?.category?.type) {
     return value.category.type;
   }
-  throw new Error("Expense can't be edited on this page");
+  if (value.isTransfer()) {
+    return 'transfer';
+  }
+  return undefined;
 });
 
-const categoryId = computed((): string => {
+const categoryId = computed((): string | undefined => {
   const value = expense.value;
   if (value?.category?.id) {
     return value.category.id;
   }
-  throw new Error("Expense can't be edited on this page");
+  return undefined;
 });
 
 async function update(evt: {
   date: string;
-  accountId: string;
-  categoryId: string;
+  credit: string | null;
+  debit: string | null;
+  categoryId: string | null;
   description: string;
   amount: string;
 }): Promise<void> {
   try {
-    let credit: string | null = null;
-    let debit: string | null = null;
-    if (expense.value?.credit) {
-      credit = evt.accountId;
-    }
-    if (expense.value?.debit != null) {
-      debit = evt.accountId;
-    }
-
     await expenseStore.updateExpense(
       props.expenseId,
       evt.date,
-      credit,
-      debit,
+      evt.credit,
+      evt.debit,
       evt.categoryId,
       evt.amount,
       evt.description,

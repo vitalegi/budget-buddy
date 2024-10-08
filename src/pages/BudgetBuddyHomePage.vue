@@ -27,6 +27,15 @@
           @click="addDebit()"
         />
         <q-btn
+          size="30px"
+          round
+          outline
+          icon="compare_arrows"
+          color="info"
+          class="big-button"
+          @click="addTransfer()"
+        />
+        <q-btn
           size="40px"
           round
           outline
@@ -77,6 +86,10 @@ function addCredit() {
 
 function addDebit() {
   router.push('/add/debit');
+}
+
+function addTransfer() {
+  router.push('/add/transfer');
 }
 </script>
 

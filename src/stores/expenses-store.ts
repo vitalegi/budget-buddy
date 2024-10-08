@@ -72,7 +72,7 @@ export const useExpenseStore = defineStore('expense', {
       date: string,
       creditId: string | null,
       debitId: string | null,
-      categoryId: string,
+      categoryId: string | null,
       amount: string,
       description: string,
     ): Promise<Expense> {
