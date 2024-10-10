@@ -14,45 +14,12 @@
         </div>
       </div>
     </div>
-    <div class="fixed-bottom row justify-evenly q-pb-md">
-      <div
-        class="col-12 row items-center justify-evenly"
-        style="max-width: 600px"
-      >
-        <q-btn
-          size="40px"
-          round
-          outline
-          icon="remove"
-          class="big-button debit"
-          @click="addDebit()"
-        />
-        <q-btn
-          size="30px"
-          round
-          outline
-          icon="compare_arrows"
-          color="info"
-          class="big-button"
-          @click="addTransfer()"
-        />
-        <q-btn
-          size="40px"
-          round
-          outline
-          icon="add"
-          class="big-button credit"
-          @click="addCredit()"
-        />
-      </div>
-    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import ExpensesByCategories from 'components/expenses/ExpensesByCategories.vue';
 import { useIntervalStore } from 'src/stores/interval-store';
-import { useRouter } from 'vue-router';
 import { computed } from 'vue';
 import ExpenseUtil from 'src/utils/expense-util';
 import { useExpenseStore } from 'src/stores/expenses-store';
@@ -71,7 +38,6 @@ defineOptions({
 const intervalStore = useIntervalStore();
 const accountFilterStore = useAccountFilterStore();
 const expenseStore = useExpenseStore();
-const router = useRouter();
 
 const amount = computed(() =>
   ExpenseUtil.amountsWithSign(expenses.value, accountFilterStore.accountId),
@@ -93,30 +59,10 @@ const sunburstData = computed((): SunburstSeries[] => {
   );
   return SunburstService.data(categories);
 });
-
-function addCredit() {
-  router.push('/add/credit');
-}
-
-function addDebit() {
-  router.push('/add/debit');
-}
-
-function addTransfer() {
-  router.push('/add/transfer');
-}
 </script>
 
 <style scoped lang="scss">
 .main-content {
-  max-height: calc(100vh - 191px);
   overflow: auto;
-}
-
-.big-button.debit {
-  color: $debit;
-}
-.big-button.credit {
-  color: $credit;
 }
 </style>

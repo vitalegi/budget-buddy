@@ -35,6 +35,10 @@ body {
   background-color: var(--q-bodyBackground);
 }
 
+.q-layout__section--marginal {
+  background-color: var(--q-bodyBackground);
+}
+
 .q-field__control::before {
   border: 1px solid $secondary !important;
 }

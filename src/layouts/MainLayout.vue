@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR lFr">
     <q-header reveal class="bg-primary text-white">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -54,6 +54,41 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer>
+      <div class="row justify-evenly q-py-sm">
+        <div
+          class="col-12 row items-center justify-evenly"
+          style="max-width: 600px"
+        >
+          <q-btn
+            size="40px"
+            round
+            outline
+            icon="remove"
+            class="big-button debit"
+            @click="addDebit()"
+          />
+          <q-btn
+            size="30px"
+            round
+            outline
+            icon="compare_arrows"
+            color="info"
+            class="big-button"
+            @click="addTransfer()"
+          />
+          <q-btn
+            size="40px"
+            round
+            outline
+            icon="add"
+            class="big-button credit"
+            @click="addCredit()"
+          />
+        </div>
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
@@ -65,6 +100,7 @@ import TimeIntervalSelector from 'src/components/TimeIntervalSelector.vue';
 import AccountSelector from 'src/components/accounts/AccountSelector.vue';
 import { ref } from 'vue';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
+import { useRouter } from 'vue-router';
 
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
@@ -72,6 +108,8 @@ const rightDrawerOpen = ref(false);
 const accountFilterStore = useAccountFilterStore();
 
 const accountId = ref(accountFilterStore.accountId);
+
+const router = useRouter();
 
 function updateAccountId(newAccountId: string) {
   accountFilterStore.setAccountId(newAccountId);
@@ -84,4 +122,23 @@ function toggleLeftDrawer() {
 function toggleRightDrawer() {
   rightDrawerOpen.value = !rightDrawerOpen.value;
 }
+function addCredit() {
+  router.push('/add/credit');
+}
+
+function addDebit() {
+  router.push('/add/debit');
+}
+
+function addTransfer() {
+  router.push('/add/transfer');
+}
 </script>
+<style scoped lang="scss">
+.big-button.debit {
+  color: $debit;
+}
+.big-button.credit {
+  color: $credit;
+}
+</style>
