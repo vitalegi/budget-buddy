@@ -81,7 +81,7 @@ export default class ExpenseUtil {
   ): CategoryWithExpenses[] {
     const multiplier = asc ? 1 : -1;
     return categories.sort((c1, c2) => {
-      return multiplier * c1.amount.compareTo(c2.amount);
+      return multiplier * c1.amount.abs().compareTo(c2.amount.abs());
     });
   }
 

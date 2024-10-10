@@ -9,6 +9,7 @@
       </div>
       <div class="row col-12 justify-center">
         <div style="max-width: 600px; width: 100%">
+          <SunburstComponent :data="sunburstData"></SunburstComponent>
           <ExpensesByCategories></ExpensesByCategories>
         </div>
       </div>
@@ -58,6 +59,10 @@ import { useExpenseStore } from 'src/stores/expenses-store';
 import ExpenseValue from 'src/components/expenses/ExpenseValue.vue';
 import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
+import SunburstComponent from 'src/components/charts/SunburstComponent.vue';
+import { SunburstSeries } from 'src/model/charts';
+import ExpenseCategoryUtil from 'src/utils/expense-category-util';
+import { SunburstService } from 'src/facade/chart-service';
 
 defineOptions({
   name: 'BudgetBuddyHomePage',
@@ -79,6 +84,15 @@ const expenses = computed(() =>
     accountFilterStore.accountId,
   ),
 );
+
+const sunburstData = computed((): SunburstSeries[] => {
+  const accountId = accountFilterStore.accountId;
+  const categories = ExpenseCategoryUtil.getCategories(
+    expenses.value,
+    accountId,
+  );
+  return SunburstService.data(categories);
+});
 
 function addCredit() {
   router.push('/add/credit');

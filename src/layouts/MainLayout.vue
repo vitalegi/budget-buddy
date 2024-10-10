@@ -74,7 +74,6 @@ const accountFilterStore = useAccountFilterStore();
 const accountId = ref(accountFilterStore.accountId);
 
 function updateAccountId(newAccountId: string) {
-  console.log(newAccountId);
   accountFilterStore.setAccountId(newAccountId);
 }
 

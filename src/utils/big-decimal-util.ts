@@ -1,4 +1,5 @@
 import bigDecimal from 'js-big-decimal';
+import NumberUtil from './number-util';
 
 export default class BigDecimalUtil {
   public static readonly ZERO = new bigDecimal('0');
@@ -23,5 +24,15 @@ export default class BigDecimalUtil {
     return abs
       .subtract(integerPart)
       .round(precision, bigDecimal.RoundingModes.DOWN);
+  }
+
+  public static sum(values: bigDecimal[]): bigDecimal {
+    if (values.length === 0) {
+      return BigDecimalUtil.ZERO;
+    }
+    return values.reduce((prev, curr) => prev.add(curr));
+  }
+  public static getNumberValue(value: bigDecimal): number {
+    return NumberUtil.parseAsDecimal(value.getValue());
   }
 }
