@@ -3,7 +3,7 @@
     <q-expansion-item label="Backup/restore">
       <BackupCard />
     </q-expansion-item>
-    <q-expansion-item label="Import data">
+    <q-expansion-item label="Import CSV">
       <ImportCard />
     </q-expansion-item>
   </q-list>
