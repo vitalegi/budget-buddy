@@ -2,7 +2,6 @@
 
 # P0
 
-- Visualizzare grafico a torta delle spese sul periodo
 - editor con tastierino numerico per importi
 - quando aggiungi/modifichi un entry, seleziona account con menù con icone
 - quando aggiungi/modifichi un entry, seleziona categoria con menù con icone

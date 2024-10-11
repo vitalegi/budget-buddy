@@ -5,7 +5,13 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/BudgetBuddyHomePage.vue') },
+      {
+        path: '',
+        component: () => import('pages/BudgetBuddyHomePage.vue'),
+        meta: {
+          footerActions: true,
+        },
+      },
       {
         path: '/add/:type',
         component: () => import('pages/ExpenseEntryAddPage.vue'),

@@ -55,7 +55,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer>
+    <q-footer v-if="showFooterActions">
       <div class="row justify-evenly q-py-sm">
         <div
           class="col-12 row items-center justify-evenly"
@@ -98,9 +98,9 @@ import CategoriesVerticalEditor from 'src/components/categories/CategoriesVertic
 import SettingsList from 'src/components/settings/SettingsList.vue';
 import TimeIntervalSelector from 'src/components/TimeIntervalSelector.vue';
 import AccountSelector from 'src/components/accounts/AccountSelector.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
@@ -110,6 +110,10 @@ const accountFilterStore = useAccountFilterStore();
 const accountId = ref(accountFilterStore.accountId);
 
 const router = useRouter();
+
+const route = useRoute();
+
+const showFooterActions = computed(() => route.meta.footerActions);
 
 function updateAccountId(newAccountId: string) {
   accountFilterStore.setAccountId(newAccountId);
