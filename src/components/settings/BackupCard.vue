@@ -7,12 +7,12 @@
         contentType="text/plain"
         color="primary"
       />
-      <CopyToClipboardComponent :content="content" />
       <ShareFileComponent
         :filename="filename"
         :content="content"
         content-type="text/plain"
       />
+      <CopyToClipboardComponent :content="content" />
     </q-card-section>
   </q-card>
 </template>

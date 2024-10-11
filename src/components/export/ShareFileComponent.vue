@@ -37,6 +37,10 @@ async function share(): Promise<void> {
   try {
     await navigator.share(data);
   } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      console.debug('Share was cancelled by the user.');
+      return;
+    }
     Notify.create('Failed sharing, try another method. Error: ' + err);
   }
 }
