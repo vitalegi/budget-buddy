@@ -43,3 +43,8 @@
     cache-control = '''
     no-cache
     '''
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Permissions-Policy = "web-share=https://buddybudget.netlify.app"
