@@ -5,6 +5,7 @@
     label="Share"
     @click="share()"
     :disable="disabled"
+    icon-right="share"
   >
   </q-btn>
 </template>

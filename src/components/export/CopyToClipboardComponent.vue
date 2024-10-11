@@ -5,14 +5,9 @@
     @click="exportFile()"
     :loading="loading"
     :disable="disabled"
+    :label="showCopiedIcon ? 'Copied!' : 'Copy to clipboard'"
+    :icon-right="showCopiedIcon ? 'done' : 'content_copy'"
   >
-    <template v-slot>
-      <div v-if="!showCopiedIcon">Copy to clipboard</div>
-      <div v-else>Copied!</div>
-      <q-space />
-      <q-icon right name="content_copy" v-if="!showCopiedIcon" />
-      <q-icon right name="done" v-else />
-    </template>
   </q-btn>
 </template>
 <script setup lang="ts">
@@ -36,7 +31,7 @@ function exportFile() {
   try {
     navigator.clipboard.writeText(props.content);
     showCopiedIcon.value = true;
-    setTimeout(() => (showCopiedIcon.value = false), 800);
+    setTimeout(() => (showCopiedIcon.value = false), 1000);
   } catch (e) {
     Notify.create(
       'Copy to clipboard is not allowed on your browser, try another method. Error: ' +

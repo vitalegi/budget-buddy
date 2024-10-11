@@ -5,6 +5,7 @@
     @click="download()"
     :disable="disabled"
     label="Download"
+    icon-right="download"
   >
   </q-btn>
 </template>
