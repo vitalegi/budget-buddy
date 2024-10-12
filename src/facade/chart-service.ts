@@ -233,16 +233,16 @@ class LineChartService {
     const bucketsAmount = new Map<string, bigDecimal>();
 
     // for each bucket, compute amount
-    buckets.entries().forEach((e) => {
-      if (e[1].length > 0) {
-        let amount = e[1]
+    buckets.forEach((value: Expense[], key: string) => {
+      if (value && value.length > 0) {
+        let amount = value
           .map((exp) => new bigDecimal(exp.amount))
           .reduce((prev, curr) => prev.add(curr))
           .multiply(sign);
         if (options.abs) {
           amount = amount.abs();
         }
-        bucketsAmount.set(e[0], amount);
+        bucketsAmount.set(key, amount);
       }
     });
 
