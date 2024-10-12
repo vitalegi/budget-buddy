@@ -101,6 +101,7 @@ import AccountSelector from 'src/components/accounts/AccountSelector.vue';
 import { computed, ref } from 'vue';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import { useRoute, useRouter } from 'vue-router';
+import { Notify } from 'quasar';
 
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
@@ -137,6 +138,10 @@ function addDebit() {
 function addTransfer() {
   router.push('/add/transfer');
 }
+
+window.addEventListener('error', (e: ErrorEvent) => {
+  Notify.create('Error: ' + e.message + ', ' + e.error);
+});
 </script>
 <style scoped lang="scss">
 .big-button.debit {
