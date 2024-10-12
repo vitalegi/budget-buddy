@@ -117,11 +117,19 @@ class SunburstService {
 }
 export const sunburstService = new SunburstService();
 
+interface LineChartOptions {
+  stack: boolean;
+  abs: boolean;
+  colors: {
+    process: (color: string) => string;
+  };
+}
+
 class LineChartService {
   public data(
     categories: CategoryWithExpenses[],
     dates: string[],
-    stack: boolean,
+    options: LineChartOptions,
   ): LineChart {
     const startTime = DateUtil.timestamp();
     const out: LineChart = {
@@ -132,7 +140,7 @@ class LineChartService {
     };
 
     for (const category of categories) {
-      out.series.push(this.mapCategoryToSeries(category, dates, stack));
+      out.series.push(this.mapCategoryToSeries(category, dates, options));
     }
 
     console.info(
@@ -144,19 +152,28 @@ class LineChartService {
   protected mapCategoryToSeries(
     category: CategoryWithExpenses,
     dates: string[],
-    stack: boolean,
+    options: LineChartOptions,
   ): LineChartSeries {
-    const stackName = stack ? 'stack' : '';
+    let sign = new bigDecimal('1');
+    if (ExpenseUtil.isDebit(category.amount)) {
+      sign = new bigDecimal('-1');
+    }
+    const stackName = options.stack ? 'stack' : '';
     const series: LineChartSeries = {
       name: category.label,
       stack: stackName,
-      color: getRgbCode(category.color, true),
-      data: this.amounts(category.expenses, dates),
+      color: options.colors.process(category.color),
+      data: this.amounts(category.expenses, dates, sign, options),
     };
     return series;
   }
 
-  protected amounts(expenses: Expense[], dates: string[]): number[] {
+  protected amounts(
+    expenses: Expense[],
+    dates: string[],
+    sign: bigDecimal,
+    options: LineChartOptions,
+  ): number[] {
     const out = new Array<number>();
 
     // preprocess all dates for faster access
@@ -168,6 +185,7 @@ class LineChartService {
         dateToBucket.set(date, bucket);
       }
     }
+
     // assign each expense to proper bucket
     const buckets = new Map<string, bigDecimal>();
     for (const expense of expenses) {
@@ -178,7 +196,10 @@ class LineChartService {
         );
       }
       const targetBucketAmount = buckets.get(targetBucketName);
-      const newAmount = new bigDecimal(expense.amount);
+      let newAmount = new bigDecimal(expense.amount).multiply(sign);
+      if (options.abs) {
+        newAmount = newAmount.abs();
+      }
       if (targetBucketAmount === undefined) {
         buckets.set(targetBucketName, newAmount);
       } else {
@@ -192,7 +213,7 @@ class LineChartService {
       if (!amount) {
         out.push(0);
       } else {
-        out.push(BigDecimalUtil.getNumberValue(amount.abs()));
+        out.push(BigDecimalUtil.getNumberValue(amount));
       }
     }
     return out;

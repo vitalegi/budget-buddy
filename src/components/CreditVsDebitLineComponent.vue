@@ -12,15 +12,7 @@ import ExpenseCategoryUtil from 'src/utils/expense-category-util';
 import { computed } from 'vue';
 import LineChartComponent from './charts/LineChartComponent.vue';
 import ExpenseUtil from 'src/utils/expense-util';
-import { getRgbCode } from 'src/model/icon';
-
-interface Props {
-  credits: boolean;
-  debits: boolean;
-  abs: boolean;
-}
-
-const props = defineProps<Props>();
+import { CategoryWithExpenses } from 'src/model/categories';
 
 const intervalStore = useIntervalStore();
 const accountFilterStore = useAccountFilterStore();
@@ -34,21 +26,54 @@ const expenses = computed(() =>
   ),
 );
 
+function credit(categories: CategoryWithExpenses[]): CategoryWithExpenses {
+  return group(
+    categories,
+    (c) => ExpenseUtil.isCredit(c.amount),
+    'credit',
+    'Credits',
+    'rgb(137, 208, 157)',
+  );
+}
+
+function debit(categories: CategoryWithExpenses[]): CategoryWithExpenses {
+  return group(
+    categories,
+    (c) => ExpenseUtil.isDebit(c.amount),
+    'debit',
+    'Debits',
+    'rgb(231, 138, 135)',
+  );
+}
+
+function group(
+  categories: CategoryWithExpenses[],
+  accept: (c: CategoryWithExpenses) => boolean,
+  id: string,
+  label: string,
+  color: string,
+): CategoryWithExpenses {
+  const targetCategories = categories.filter((c) => accept(c));
+  const amount = targetCategories
+    .map((c) => c.amount)
+    .reduce((prev, curr) => prev.add(curr));
+
+  return {
+    id: id,
+    label: label,
+    icon: '',
+    color: color,
+    expenses: targetCategories.flatMap((c) => c.expenses),
+    amount: amount,
+  };
+}
+
 const data = computed((): LineChart => {
   const accountId = accountFilterStore.accountId;
   const categories = ExpenseCategoryUtil.getCategories(
     expenses.value,
     accountId,
   );
-  const targetCategories = categories.filter((e) => {
-    if (ExpenseUtil.isDebit(e.amount)) {
-      return props.debits;
-    }
-    if (ExpenseUtil.isCredit(e.amount)) {
-      return props.credits;
-    }
-    return false;
-  });
   let from = intervalStore.from;
   let to = intervalStore.to;
 
@@ -56,12 +81,13 @@ const data = computed((): LineChart => {
     from = ExpenseUtil.getSmallestYear(expenses.value);
     to = ExpenseUtil.getBiggestYear(expenses.value);
   }
+
   const dates = chartService.dateRange(from, to, intervalStore.interval);
-  return lineChartService.data(targetCategories, dates, {
-    abs: props.abs,
+  return lineChartService.data([credit(categories), debit(categories)], dates, {
+    abs: false,
     stack: false,
     colors: {
-      process: (color: string): string => getRgbCode(color, true),
+      process: (color: string): string => color,
     },
   });
 });

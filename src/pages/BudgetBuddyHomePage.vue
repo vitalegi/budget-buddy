@@ -18,8 +18,9 @@
             :align="'center'"
           >
             <q-tab name="pie" icon="data_usage" label="% by category" />
-            <q-tab name="debits" icon="show_chart" label="Expenses" />
-            <q-tab name="credits" icon="show_chart" label="Incomes" />
+            <q-tab name="compare" icon="account_balance" label="Balance" />
+            <q-tab name="credits" icon="trending_up" label="Incomes" />
+            <q-tab name="debits" icon="trending_down" label="Expenses" />
           </q-tabs>
           <q-tab-panels
             v-model="chartTab"
@@ -30,10 +31,21 @@
               <CategoriesSunburstComponent />
             </q-tab-panel>
             <q-tab-panel name="debits">
-              <CategoriesLineComponent :debits="true" :credits="false" />
+              <CategoriesLineComponent
+                :debits="true"
+                :credits="false"
+                :abs="true"
+              />
             </q-tab-panel>
             <q-tab-panel name="credits">
-              <CategoriesLineComponent :debits="false" :credits="true" />
+              <CategoriesLineComponent
+                :debits="false"
+                :credits="true"
+                :abs="true"
+              />
+            </q-tab-panel>
+            <q-tab-panel name="compare">
+              <CreditVsDebitLineComponent />
             </q-tab-panel>
           </q-tab-panels>
           <ExpensesByCategories></ExpensesByCategories>
@@ -54,6 +66,7 @@ import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import CategoriesSunburstComponent from 'src/components/CategoriesSunburstComponent.vue';
 import CategoriesLineComponent from 'src/components/CategoriesLineComponent.vue';
+import CreditVsDebitLineComponent from 'src/components/CreditVsDebitLineComponent.vue';
 
 defineOptions({
   name: 'BudgetBuddyHomePage',
