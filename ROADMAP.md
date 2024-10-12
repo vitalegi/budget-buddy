@@ -2,7 +2,6 @@
 
 # P0
 
-- Visualizzare andamento spese
 - quando aggiungi/modifichi un entry, seleziona account con menù con icone
 - quando aggiungi/modifichi un entry, seleziona categoria con menù con icone
 - Tracciare storico modifiche
