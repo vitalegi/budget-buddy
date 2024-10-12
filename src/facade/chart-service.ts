@@ -199,10 +199,15 @@ class LineChartService {
   }
 
   protected getBucket(value: string, buckets: string[]): string {
+    let previous: string | undefined;
     for (const bucket of buckets) {
       if (value <= bucket) {
+        if (previous) {
+          return previous;
+        }
         return bucket;
       }
+      previous = bucket;
     }
     return buckets[buckets.length - 1];
   }
