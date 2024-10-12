@@ -54,6 +54,9 @@ const data = computed((): LineChart => {
       );
     }
   }
+  for (let i = 1; i < seriesData.length; i++) {
+    seriesData[i] = seriesData[i] + seriesData[i - 1];
+  }
 
   // chart model
   const amount = seriesData.reduce((prev, curr) => prev + curr) || 0;
