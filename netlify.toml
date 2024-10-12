@@ -47,4 +47,5 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Permissions-Policy = "web-share=\"https://buddybudget.netlify.app\""
+    Permissions-Policy = '''
+    web-share="https://buddybudget.netlify.app"'''
