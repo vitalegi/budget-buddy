@@ -7,6 +7,9 @@ function icon(icon: string, color: string): Icon {
   return { icon: icon, color: color };
 }
 
+export const COLOR_CREDIT = 'rgb(137, 208, 157)';
+export const COLOR_DEBIT = 'rgb(231, 138, 135)';
+
 const icons = new Array<Icon>();
 icons.push(icon('home', 'red-4'));
 icons.push(icon('shopping_cart', 'pink-5'));

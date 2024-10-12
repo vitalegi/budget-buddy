@@ -3,7 +3,7 @@ import bigDecimal from 'js-big-decimal';
 import { CategoryWithExpenses } from 'src/model/categories';
 import { LineChart, LineChartSeries, SunburstSeries } from 'src/model/charts';
 import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
-import { getRgbCode } from 'src/model/icon';
+import { COLOR_CREDIT, COLOR_DEBIT, getRgbCode } from 'src/model/icon';
 import TimeInterval from 'src/model/interval';
 import BigDecimalUtil from 'src/utils/big-decimal-util';
 import DateUtil from 'src/utils/date-util';
@@ -38,6 +38,60 @@ class ChartService {
         return addDays(current, 1);
     }
   }
+
+  public getDateBuckets(
+    expenses: Expense[],
+    dates: string[],
+  ): Map<string, Expense[]> {
+    const buckets = new Map<string, Expense[]>();
+
+    // preprocess all dates for faster access
+    const dateToBucket = new Map<string, string>();
+    for (const expense of expenses) {
+      const date = expense.date;
+      if (!dateToBucket.has(date)) {
+        const bucket = chartService.getDateBucket(date, dates);
+        dateToBucket.set(date, bucket);
+      }
+    }
+
+    // assign each expense to proper bucket
+    for (const expense of expenses) {
+      const targetBucketName = dateToBucket.get(expense.date);
+      if (targetBucketName === undefined) {
+        throw new Error(
+          `Can't map ${expense.date} to buckets: ${Array.from(dateToBucket.keys())}`,
+        );
+      }
+      const target = buckets.get(targetBucketName);
+      if (target === undefined) {
+        const list = new Array<Expense>();
+        list.push(expense);
+        buckets.set(targetBucketName, list);
+      } else {
+        target.push(expense);
+      }
+    }
+    return buckets;
+  }
+
+  public getDateBucket(value: string, buckets: string[]): string {
+    let previous: string | undefined;
+    for (const bucket of buckets) {
+      if (value <= bucket) {
+        if (previous) {
+          return previous;
+        }
+        return bucket;
+      }
+      previous = bucket;
+    }
+    return buckets[buckets.length - 1];
+  }
+
+  public datesToLabels(dates: string[]): string[] {
+    return dates.map((d) => format(d, 'dd/MM/yyyy'));
+  }
 }
 export const chartService = new ChartService();
 
@@ -52,18 +106,8 @@ class SunburstService {
     const debits = categories.filter((c) => ExpenseUtil.isDebit(c.amount));
 
     const out = [
-      this.mapExpenseTypeToSeries(
-        credits,
-        'Credits',
-        'rgb(137, 208, 157)',
-        total,
-      ),
-      this.mapExpenseTypeToSeries(
-        debits,
-        'Debits',
-        'rgb(231, 138, 135)',
-        total,
-      ),
+      this.mapExpenseTypeToSeries(credits, 'Credits', COLOR_CREDIT, total),
+      this.mapExpenseTypeToSeries(debits, 'Debits', COLOR_DEBIT, total),
     ];
     console.info(
       `loaded sunburst chart data in ${DateUtil.timestamp() - startTime}ms`,
@@ -149,6 +193,16 @@ class LineChartService {
     return out;
   }
 
+  public chart(xAxis: string[], series: LineChartSeries[]): LineChart {
+    const out: LineChart = {
+      xAxis: {
+        data: xAxis,
+      },
+      series: series,
+    };
+    return out;
+  }
+
   protected mapCategoryToSeries(
     category: CategoryWithExpenses,
     dates: string[],
@@ -174,42 +228,28 @@ class LineChartService {
     sign: bigDecimal,
     options: LineChartOptions,
   ): number[] {
+    const buckets = chartService.getDateBuckets(expenses, dates);
+
+    const bucketsAmount = new Map<string, bigDecimal>();
+
+    // for each bucket, compute amount
+    buckets.entries().forEach((e) => {
+      if (e[1].length > 0) {
+        let amount = e[1]
+          .map((exp) => new bigDecimal(exp.amount))
+          .reduce((prev, curr) => prev.add(curr))
+          .multiply(sign);
+        if (options.abs) {
+          amount = amount.abs();
+        }
+        bucketsAmount.set(e[0], amount);
+      }
+    });
+
+    // sort values
     const out = new Array<number>();
-
-    // preprocess all dates for faster access
-    const dateToBucket = new Map<string, string>();
-    for (const expense of expenses) {
-      const date = expense.date;
-      if (!dateToBucket.has(date)) {
-        const bucket = this.getBucket(date, dates);
-        dateToBucket.set(date, bucket);
-      }
-    }
-
-    // assign each expense to proper bucket
-    const buckets = new Map<string, bigDecimal>();
-    for (const expense of expenses) {
-      const targetBucketName = dateToBucket.get(expense.date);
-      if (targetBucketName === undefined) {
-        throw new Error(
-          `Can't map ${expense.date} to buckets: ${Array.from(dateToBucket.keys())}`,
-        );
-      }
-      const targetBucketAmount = buckets.get(targetBucketName);
-      let newAmount = new bigDecimal(expense.amount).multiply(sign);
-      if (options.abs) {
-        newAmount = newAmount.abs();
-      }
-      if (targetBucketAmount === undefined) {
-        buckets.set(targetBucketName, newAmount);
-      } else {
-        buckets.set(targetBucketName, newAmount.add(targetBucketAmount));
-      }
-    }
-
-    // sort values properly
     for (const date of dates) {
-      const amount = buckets.get(date);
+      const amount = bucketsAmount.get(date);
       if (!amount) {
         out.push(0);
       } else {
@@ -217,20 +257,6 @@ class LineChartService {
       }
     }
     return out;
-  }
-
-  protected getBucket(value: string, buckets: string[]): string {
-    let previous: string | undefined;
-    for (const bucket of buckets) {
-      if (value <= bucket) {
-        if (previous) {
-          return previous;
-        }
-        return bucket;
-      }
-      previous = bucket;
-    }
-    return buckets[buckets.length - 1];
   }
 }
 

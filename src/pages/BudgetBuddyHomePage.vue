@@ -17,7 +17,7 @@
             indicator-color="primary"
             :align="'center'"
           >
-            <q-tab name="compare" icon="account_balance" label="Balance" />
+            <q-tab name="balance" icon="account_balance" label="Balance" />
             <q-tab name="pie" icon="data_usage" label="Split" />
             <q-tab name="credits" icon="trending_up" label="In" />
             <q-tab name="debits" icon="trending_down" label="Out" />
@@ -44,8 +44,8 @@
                 :abs="true"
               />
             </q-tab-panel>
-            <q-tab-panel name="compare">
-              <CreditVsDebitLineComponent />
+            <q-tab-panel name="balance">
+              <BalanceLineComponent />
             </q-tab-panel>
           </q-tab-panels>
           <ExpensesByCategories></ExpensesByCategories>
@@ -66,7 +66,7 @@ import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import CategoriesSunburstComponent from 'src/components/CategoriesSunburstComponent.vue';
 import CategoriesLineComponent from 'src/components/CategoriesLineComponent.vue';
-import CreditVsDebitLineComponent from 'src/components/CreditVsDebitLineComponent.vue';
+import BalanceLineComponent from 'src/components/BalanceLineComponent.vue';
 
 defineOptions({
   name: 'BudgetBuddyHomePage',
