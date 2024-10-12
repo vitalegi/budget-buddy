@@ -10,6 +10,7 @@
       <div class="row col-12 justify-center">
         <div style="max-width: 600px; width: 100%">
           <SunburstComponent :data="sunburstData"></SunburstComponent>
+          <LineChartComponent :data="expensesChartData"></LineChartComponent>
           <ExpensesByCategories></ExpensesByCategories>
         </div>
       </div>
@@ -27,9 +28,16 @@ import ExpenseValue from 'src/components/expenses/ExpenseValue.vue';
 import TimeIntervalSlideItem from 'src/components/TimeIntervalSlideItem.vue';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import SunburstComponent from 'src/components/charts/SunburstComponent.vue';
-import { SunburstSeries } from 'src/model/charts';
+import { LineChart, SunburstSeries } from 'src/model/charts';
 import ExpenseCategoryUtil from 'src/utils/expense-category-util';
-import { SunburstService } from 'src/facade/chart-service';
+import {
+  chartService,
+  lineChartService,
+  sunburstService,
+} from 'src/facade/chart-service';
+import LineChartComponent from 'src/components/charts/LineChartComponent.vue';
+import { endOfYear, parse, startOfYear } from 'date-fns';
+import { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 
 defineOptions({
   name: 'BudgetBuddyHomePage',
@@ -57,7 +65,34 @@ const sunburstData = computed((): SunburstSeries[] => {
     expenses.value,
     accountId,
   );
-  return SunburstService.data(categories);
+  return sunburstService.data(categories);
+});
+
+const expensesChartData = computed((): LineChart => {
+  const accountId = accountFilterStore.accountId;
+  const categories = ExpenseCategoryUtil.getCategories(
+    expenses.value,
+    accountId,
+  );
+  const targetCategories = categories.filter((e) =>
+    ExpenseUtil.isDebit(e.amount),
+  );
+  let from = intervalStore.from;
+  let to = intervalStore.to;
+
+  if (intervalStore.interval === 'all') {
+    const firstDate = expenses.value
+      .map((e) => e.date)
+      .reduce((prev, curr) => (prev < curr ? prev : curr));
+    const lastDate = expenses.value
+      .map((e) => e.date)
+      .reduce((prev, curr) => (prev > curr ? prev : curr));
+    from = startOfYear(parse(firstDate, EXPENSE_DATE_FORMAT, new Date()));
+    to = endOfYear(parse(lastDate, EXPENSE_DATE_FORMAT, new Date()));
+  }
+
+  const dates = chartService.dateRange(from, to, intervalStore.interval);
+  return lineChartService.data(targetCategories, dates, false);
 });
 </script>
 

@@ -1,47 +1,77 @@
+import { addDays, addMonths, addYears, format } from 'date-fns';
 import bigDecimal from 'js-big-decimal';
 import { CategoryWithExpenses } from 'src/model/categories';
-import { SunburstSeries } from 'src/model/charts';
+import { LineChart, LineChartSeries, SunburstSeries } from 'src/model/charts';
+import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 import { getRgbCode } from 'src/model/icon';
+import TimeInterval from 'src/model/interval';
 import BigDecimalUtil from 'src/utils/big-decimal-util';
 import DateUtil from 'src/utils/date-util';
+import ExpenseUtil from 'src/utils/expense-util';
 
 function absSum(values: bigDecimal[]): number {
   return BigDecimalUtil.getNumberValue(BigDecimalUtil.sum(values).abs());
 }
 
-export class SunburstService {
+class ChartService {
+  public dateRange(from: Date, to: Date, interval: TimeInterval): string[] {
+    const dates = new Array<string>();
+    let current = from;
+    while (current < to) {
+      dates.push(format(current, EXPENSE_DATE_FORMAT));
+      current = this.nextStep(current, interval);
+    }
+    return dates;
+  }
+
+  protected nextStep(current: Date, interval: TimeInterval): Date {
+    switch (interval) {
+      case 'all':
+        return addYears(current, 1);
+      case 'yearly':
+        return addMonths(current, 1);
+      case 'monthly':
+        return addDays(current, 3);
+      case 'weekly':
+        return addDays(current, 1);
+      case 'daily':
+        return addDays(current, 1);
+    }
+  }
+}
+export const chartService = new ChartService();
+
+class SunburstService {
   private static LABEL_MIN_PERCENTAGE = new bigDecimal('0.08');
 
-  public static data(categories: CategoryWithExpenses[]): SunburstSeries[] {
+  public data(categories: CategoryWithExpenses[]): SunburstSeries[] {
     const startTime = DateUtil.timestamp();
     const total = BigDecimalUtil.sum(categories.map((c) => c.amount.abs()));
 
-    const credits = categories.filter(
-      (c) => c.amount.compareTo(BigDecimalUtil.ZERO) >= 0,
-    );
-    const debits = categories.filter(
-      (c) => c.amount.compareTo(BigDecimalUtil.ZERO) < 0,
-    );
+    const credits = categories.filter((c) => ExpenseUtil.isCredit(c.amount));
+    const debits = categories.filter((c) => ExpenseUtil.isDebit(c.amount));
 
     const out = [
-      SunburstService.mapExpenseTypeToSeries(
+      this.mapExpenseTypeToSeries(
         credits,
         'Credits',
         'rgb(137, 208, 157)',
         total,
       ),
-      SunburstService.mapExpenseTypeToSeries(
+      this.mapExpenseTypeToSeries(
         debits,
         'Debits',
         'rgb(231, 138, 135)',
         total,
       ),
     ];
-    console.debug(`loaded chart data in ${DateUtil.timestamp() - startTime}ms`);
+    console.info(
+      `loaded sunburst chart data in ${DateUtil.timestamp() - startTime}ms`,
+    );
     return out;
   }
 
-  protected static mapExpenseTypeToSeries(
+  protected mapExpenseTypeToSeries(
     categories: CategoryWithExpenses[],
     name: string,
     color: string,
@@ -55,13 +85,13 @@ export class SunburstService {
         color: color,
       },
       label: {
-        show: SunburstService.showLabel(new bigDecimal(amount), totalValue),
+        show: this.showLabel(new bigDecimal(amount), totalValue),
       },
       children: categories.map((c) => this.mapCategoryToSeries(c, totalValue)),
     };
   }
 
-  protected static mapCategoryToSeries(
+  protected mapCategoryToSeries(
     category: CategoryWithExpenses,
     totalValue: bigDecimal,
   ): SunburstSeries {
@@ -72,12 +102,12 @@ export class SunburstService {
         color: getRgbCode(category.color, true),
       },
       label: {
-        show: SunburstService.showLabel(category.amount.abs(), totalValue),
+        show: this.showLabel(category.amount.abs(), totalValue),
       },
     };
   }
 
-  protected static showLabel(amount: bigDecimal, tot: bigDecimal): boolean {
+  protected showLabel(amount: bigDecimal, tot: bigDecimal): boolean {
     if (tot.compareTo(BigDecimalUtil.ZERO) === 0) {
       return false;
     }
@@ -85,3 +115,97 @@ export class SunburstService {
     return ratio.compareTo(SunburstService.LABEL_MIN_PERCENTAGE) >= 0;
   }
 }
+export const sunburstService = new SunburstService();
+
+class LineChartService {
+  public data(
+    categories: CategoryWithExpenses[],
+    dates: string[],
+    stack: boolean,
+  ): LineChart {
+    const startTime = DateUtil.timestamp();
+    const out: LineChart = {
+      xAxis: {
+        data: dates.map((d) => format(d, 'dd/MM/yyyy')),
+      },
+      series: new Array<LineChartSeries>(),
+    };
+
+    for (const category of categories) {
+      out.series.push(this.mapCategoryToSeries(category, dates, stack));
+    }
+
+    console.info(
+      `loaded line chart data in ${DateUtil.timestamp() - startTime}ms`,
+    );
+    return out;
+  }
+
+  protected mapCategoryToSeries(
+    category: CategoryWithExpenses,
+    dates: string[],
+    stack: boolean,
+  ): LineChartSeries {
+    const stackName = stack ? 'stack' : '';
+    const series: LineChartSeries = {
+      name: category.label,
+      stack: stackName,
+      color: getRgbCode(category.color, true),
+      data: this.amounts(category.expenses, dates),
+    };
+    return series;
+  }
+
+  protected amounts(expenses: Expense[], dates: string[]): number[] {
+    const out = new Array<number>();
+
+    // preprocess all dates for faster access
+    const dateToBucket = new Map<string, string>();
+    for (const expense of expenses) {
+      const date = expense.date;
+      if (!dateToBucket.has(date)) {
+        const bucket = this.getBucket(date, dates);
+        dateToBucket.set(date, bucket);
+      }
+    }
+    // assign each expense to proper bucket
+    const buckets = new Map<string, bigDecimal>();
+    for (const expense of expenses) {
+      const targetBucketName = dateToBucket.get(expense.date);
+      if (targetBucketName === undefined) {
+        throw new Error(
+          `Can't map ${expense.date} to buckets: ${Array.from(dateToBucket.keys())}`,
+        );
+      }
+      const targetBucketAmount = buckets.get(targetBucketName);
+      const newAmount = new bigDecimal(expense.amount);
+      if (targetBucketAmount === undefined) {
+        buckets.set(targetBucketName, newAmount);
+      } else {
+        buckets.set(targetBucketName, newAmount.add(targetBucketAmount));
+      }
+    }
+
+    // sort values properly
+    for (const date of dates) {
+      const amount = buckets.get(date);
+      if (!amount) {
+        out.push(0);
+      } else {
+        out.push(BigDecimalUtil.getNumberValue(amount.abs()));
+      }
+    }
+    return out;
+  }
+
+  protected getBucket(value: string, buckets: string[]): string {
+    for (const bucket of buckets) {
+      if (value <= bucket) {
+        return bucket;
+      }
+    }
+    return buckets[buckets.length - 1];
+  }
+}
+
+export const lineChartService = new LineChartService();

@@ -110,4 +110,11 @@ export default class ExpenseUtil {
         return multiplier * (e1.date > e2.date ? 1 : -1);
       });
   }
+
+  public static isCredit(amount: bigDecimal) {
+    return amount.compareTo(BigDecimalUtil.ZERO) >= 0;
+  }
+  public static isDebit(amount: bigDecimal) {
+    return amount.compareTo(BigDecimalUtil.ZERO) < 0;
+  }
 }

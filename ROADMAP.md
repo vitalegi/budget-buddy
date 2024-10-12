@@ -2,15 +2,12 @@
 
 # P0
 
-- editor con tastierino numerico per importi
+- Visualizzare andamento spese
 - quando aggiungi/modifichi un entry, seleziona account con menù con icone
 - quando aggiungi/modifichi un entry, seleziona categoria con menù con icone
 - Tracciare storico modifiche
 
 # P1
-
-- Visualizzare andamento spese
-- Salvataggio backend
 
 # P2
 
@@ -18,3 +15,5 @@
 - Crea template
 - Eliminare categoria (se vuota)
 - Eliminare account (se vuoto)
+- editor con tastierino numerico per importi
+- Salvataggio backend

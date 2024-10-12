@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import bigDecimal from 'js-big-decimal';
 import BigDecimalUtil from 'src/utils/big-decimal-util';
+import ExpenseUtil from 'src/utils/expense-util';
 import { computed } from 'vue';
 
 interface Props {
@@ -20,7 +21,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const amountType = computed(() =>
-  props.amount.compareTo(BigDecimalUtil.ZERO) >= 0 ? 'credit' : 'debit',
+  ExpenseUtil.isCredit(props.amount) ? 'credit' : 'debit',
 );
 
 const formatAmountIntPart = computed((): string => {
