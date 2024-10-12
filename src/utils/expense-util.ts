@@ -2,7 +2,7 @@ import bigDecimal from 'js-big-decimal';
 import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 import BigDecimalUtil from './big-decimal-util';
 import Category from 'src/model/category';
-import { format } from 'date-fns';
+import { endOfYear, format, parse, startOfYear } from 'date-fns';
 import { CategoryWithExpenses } from 'src/model/categories';
 
 export default class ExpenseUtil {
@@ -116,5 +116,19 @@ export default class ExpenseUtil {
   }
   public static isDebit(amount: bigDecimal) {
     return amount.compareTo(BigDecimalUtil.ZERO) < 0;
+  }
+
+  public static getSmallestYear(expenses: Expense[]): Date {
+    const firstDate = expenses
+      .map((e) => e.date)
+      .reduce((prev, curr) => (prev < curr ? prev : curr));
+    return startOfYear(parse(firstDate, EXPENSE_DATE_FORMAT, new Date()));
+  }
+
+  public static getBiggestYear(expenses: Expense[]): Date {
+    const lastDate = expenses
+      .map((e) => e.date)
+      .reduce((prev, curr) => (prev > curr ? prev : curr));
+    return endOfYear(parse(lastDate, EXPENSE_DATE_FORMAT, new Date()));
   }
 }
