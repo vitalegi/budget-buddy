@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { chartService, lineChartService } from 'src/facade/chart-service';
 import { LineChart } from 'src/model/charts';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import { useExpenseStore } from 'src/stores/expenses-store';
@@ -13,6 +12,7 @@ import { computed } from 'vue';
 import LineChartComponent from './charts/LineChartComponent.vue';
 import ExpenseUtil from 'src/utils/expense-util';
 import { getRgbCode } from 'src/model/icon';
+import FacadeFactory from 'src/facade/facade-factory';
 
 interface Props {
   credits: boolean;
@@ -25,6 +25,8 @@ const props = defineProps<Props>();
 const intervalStore = useIntervalStore();
 const accountFilterStore = useAccountFilterStore();
 const expenseStore = useExpenseStore();
+
+const factory = new FacadeFactory();
 
 const expenses = computed(() =>
   expenseStore.expensesInInterval(
@@ -56,8 +58,10 @@ const data = computed((): LineChart => {
     from = ExpenseUtil.getSmallestYear(expenses.value);
     to = ExpenseUtil.getBiggestYear(expenses.value);
   }
-  const dates = chartService.dateRange(from, to, intervalStore.interval);
-  return lineChartService.data(targetCategories, dates, {
+  const dates = factory
+    .chartService()
+    .dateRange(from, to, intervalStore.interval);
+  return factory.lineChartService().data(targetCategories, dates, {
     abs: props.abs,
     stack: false,
     colors: {

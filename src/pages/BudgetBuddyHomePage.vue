@@ -76,7 +76,7 @@ const intervalStore = useIntervalStore();
 const accountFilterStore = useAccountFilterStore();
 const expenseStore = useExpenseStore();
 
-const chartTab = ref('pie');
+const chartTab = ref('balance');
 
 const amount = computed(() =>
   ExpenseUtil.amountsWithSign(expenses.value, accountFilterStore.accountId),

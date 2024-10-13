@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { chartService, lineChartService } from 'src/facade/chart-service';
 import { LineChart, LineChartSeries } from 'src/model/charts';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import { useExpenseStore } from 'src/stores/expenses-store';
@@ -13,10 +12,13 @@ import LineChartComponent from './charts/LineChartComponent.vue';
 import ExpenseUtil from 'src/utils/expense-util';
 import BigDecimalUtil from 'src/utils/big-decimal-util';
 import { COLOR_CREDIT, COLOR_DEBIT } from 'src/model/icon';
+import FacadeFactory from 'src/facade/facade-factory';
 
 const intervalStore = useIntervalStore();
 const accountFilterStore = useAccountFilterStore();
 const expenseStore = useExpenseStore();
+
+const factory = new FacadeFactory();
 
 const expenses = computed(() =>
   expenseStore.expensesInInterval(
@@ -37,6 +39,7 @@ const data = computed((): LineChart => {
   }
 
   // retrieve data
+  const chartService = factory.chartService();
   const dates = chartService.dateRange(from, to, intervalStore.interval);
   const buckets = chartService.getDateBuckets(expenses.value, dates);
 
@@ -68,7 +71,7 @@ const data = computed((): LineChart => {
   };
 
   const xAxis = chartService.datesToLabels(dates);
-  return lineChartService.chart(xAxis, [series]);
+  return factory.lineChartService().chart(xAxis, [series]);
 });
 </script>
 
