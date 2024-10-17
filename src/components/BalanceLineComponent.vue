@@ -4,9 +4,6 @@
 
 <script setup lang="ts">
 import { LineChart, LineChartSeries } from 'src/model/charts';
-import { useAccountFilterStore } from 'src/stores/account-filter-store';
-import { useExpenseStore } from 'src/stores/expenses-store';
-import { useIntervalStore } from 'src/stores/interval-store';
 import { computed } from 'vue';
 import LineChartComponent from './charts/LineChartComponent.vue';
 import ExpenseUtil from 'src/utils/expense-util';
@@ -14,36 +11,20 @@ import BigDecimalUtil from 'src/utils/big-decimal-util';
 import { COLOR_CREDIT, COLOR_DEBIT } from 'src/model/icon';
 import FacadeFactory from 'src/facade/facade-factory';
 
-const intervalStore = useIntervalStore();
-const accountFilterStore = useAccountFilterStore();
-const expenseStore = useExpenseStore();
-
 const factory = new FacadeFactory();
+const expenseService = factory.expenseService();
 const chartService = factory.chartService();
 
-const expenses = computed(() =>
-  expenseStore.expensesInInterval(
-    intervalStore.from,
-    intervalStore.to,
-    accountFilterStore.accountId,
-  ),
-);
+const expenses = computed(() => expenseService.getExpensesInScope());
 
 const tooltipFormatter = computed(() => chartService.amountFormatter());
 
 const data = computed((): LineChart => {
-  const accountId = accountFilterStore.accountId;
-  let from = intervalStore.from;
-  let to = intervalStore.to;
-
-  if (intervalStore.interval === 'all') {
-    from = ExpenseUtil.getSmallestYear(expenses.value);
-    to = ExpenseUtil.getBiggestYear(expenses.value);
-  }
+  const accountId = expenseService.getSelectedAccount();
 
   // retrieve data
   const chartService = factory.chartService();
-  const dates = chartService.dateRange(from, to, intervalStore.interval);
+  const dates = chartService.getDatesInScope();
   const buckets = chartService.getDateBuckets(expenses.value, dates);
 
   // build series

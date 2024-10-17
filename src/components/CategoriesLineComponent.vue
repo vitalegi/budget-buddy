@@ -46,16 +46,9 @@ const data = computed((): LineChart => {
     }
     return false;
   });
-  let from = expenseService.getSelectedFrom();
-  let to = expenseService.getSelectedTo();
 
-  if (expenseService.getIntervalType() === 'all') {
-    from = ExpenseUtil.getSmallestYear(expenses.value);
-    to = ExpenseUtil.getBiggestYear(expenses.value);
-  }
-  const dates = factory
-    .chartService()
-    .dateRange(from, to, expenseService.getIntervalType());
+  const chartService = factory.chartService();
+  const dates = chartService.getDatesInScope();
   return factory.lineChartService().data(targetCategories, dates, {
     abs: props.abs,
     stack: false,

@@ -16,7 +16,7 @@ export default class FacadeFactory {
   }
 */
   public chartService(): ChartService {
-    return new ChartService();
+    return new ChartService(this.expenseService());
   }
 
   public lineChartService(): LineChartService {

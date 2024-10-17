@@ -2,8 +2,29 @@ import { addDays, addMonths, addYears, format } from 'date-fns';
 import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 import TimeInterval from 'src/model/interval';
 import NumberUtil from 'src/utils/number-util';
+import ExpenseService from './expense-service';
+import ExpenseUtil from 'src/utils/expense-util';
 
 export default class ChartService {
+  expenseService;
+
+  public constructor(expenseService: ExpenseService) {
+    this.expenseService = expenseService;
+  }
+
+  public getDatesInScope() {
+    const expenses = this.expenseService.getExpensesInScope();
+    const interval = this.expenseService.getIntervalType();
+    let from = this.expenseService.getSelectedFrom();
+    let to = this.expenseService.getSelectedTo();
+
+    if (interval === 'all') {
+      from = ExpenseUtil.getSmallestYear(expenses);
+      to = ExpenseUtil.getBiggestYear(expenses);
+    }
+
+    return this.dateRange(from, to, interval);
+  }
   public dateRange(from: Date, to: Date, interval: TimeInterval): string[] {
     const dates = new Array<string>();
     let current = from;

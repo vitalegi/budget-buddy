@@ -4,30 +4,20 @@
 
 <script setup lang="ts">
 import { SunburstSeries } from 'src/model/charts';
-import { useAccountFilterStore } from 'src/stores/account-filter-store';
-import { useExpenseStore } from 'src/stores/expenses-store';
-import { useIntervalStore } from 'src/stores/interval-store';
 import ExpenseCategoryUtil from 'src/utils/expense-category-util';
 import { computed } from 'vue';
 import SunburstComponent from './charts/SunburstComponent.vue';
 import SunburstService from 'src/facade/chart-sunburst-service';
+import FacadeFactory from 'src/facade/facade-factory';
 
-const intervalStore = useIntervalStore();
-const accountFilterStore = useAccountFilterStore();
-const expenseStore = useExpenseStore();
-
+const factory = new FacadeFactory();
+const expenseService = factory.expenseService();
 const sunburstService = new SunburstService();
 
-const expenses = computed(() =>
-  expenseStore.expensesInInterval(
-    intervalStore.from,
-    intervalStore.to,
-    accountFilterStore.accountId,
-  ),
-);
+const expenses = computed(() => expenseService.getExpensesInScope());
 
 const data = computed((): SunburstSeries[] => {
-  const accountId = accountFilterStore.accountId;
+  const accountId = expenseService.getSelectedAccount();
   const categories = ExpenseCategoryUtil.getCategories(
     expenses.value,
     accountId,
