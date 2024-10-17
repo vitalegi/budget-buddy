@@ -10,7 +10,6 @@ import LineChartComponent from './charts/LineChartComponent.vue';
 import ExpenseUtil from 'src/utils/expense-util';
 import { getRgbCode } from 'src/model/icon';
 import FacadeFactory from 'src/facade/facade-factory';
-import ExpenseService from 'src/facade/expense-service';
 
 interface Props {
   credits: boolean;
@@ -21,8 +20,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const factory = new FacadeFactory();
-
-const expenseService = new ExpenseService();
+const expenseService = factory.expenseService();
 
 const expenses = computed(() => expenseService.getExpensesInScope());
 

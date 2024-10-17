@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import TimeInterval from 'src/model/interval';
 import {
   add,
+  addDays,
   endOfDay,
   endOfMonth,
   endOfWeek,
@@ -27,6 +28,8 @@ function getLabel(interval: TimeInterval, from: Date, to: Date): string {
       return 'All';
     case 'yearly':
       return format(from, 'yyyy');
+    case '90-days':
+      return format(from, 'dd-MM') + ' ' + format(to, 'dd-MM');
     case 'monthly':
       return format(from, "LLL ''yy", options);
     case 'weekly':
@@ -49,6 +52,8 @@ function getInterval(
       return { from: new Date(0, 0, 0), to: new Date(9999, 0, 0) };
     case 'yearly':
       return { from: startOfYear(date), to: endOfYear(date) };
+    case '90-days':
+      return { from: addDays(date, -90), to: date };
     case 'monthly':
       return { from: startOfMonth(date), to: endOfMonth(date) };
     case 'weekly':

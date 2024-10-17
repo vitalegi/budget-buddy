@@ -19,6 +19,8 @@ export default class ChartService {
         return addYears(current, 1);
       case 'yearly':
         return addMonths(current, 1);
+      case '90-days':
+        return addDays(current, 90);
       case 'monthly':
         return addDays(current, 3);
       case 'weekly':
