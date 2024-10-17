@@ -1,5 +1,5 @@
 <template>
-  <LineChartComponent :data="data"></LineChartComponent>
+  <LineChartComponent :data="data" :format-tooltip="tooltipFormatter" />
 </template>
 
 <script setup lang="ts">
@@ -21,8 +21,11 @@ const props = defineProps<Props>();
 
 const factory = new FacadeFactory();
 const expenseService = factory.expenseService();
+const chartService = factory.chartService();
 
 const expenses = computed(() => expenseService.getExpensesInScope());
+
+const tooltipFormatter = computed(() => chartService.amountFormatter());
 
 const data = computed((): LineChart => {
   const accountId = expenseService.getSelectedAccount();

@@ -1,6 +1,7 @@
 import { addDays, addMonths, addYears, format } from 'date-fns';
 import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
 import TimeInterval from 'src/model/interval';
+import NumberUtil from 'src/utils/number-util';
 
 export default class ChartService {
   public dateRange(from: Date, to: Date, interval: TimeInterval): string[] {
@@ -82,5 +83,17 @@ export default class ChartService {
 
   public datesToLabels(dates: string[]): string[] {
     return dates.map((d) => format(d, 'dd/MM/yyyy'));
+  }
+
+  public amountFormatter() {
+    return (value: string | number | Date | null | undefined) => {
+      if (!value) {
+        return NumberUtil.formatCurrency(0);
+      }
+      if (value instanceof Date) {
+        return 'N/A';
+      }
+      return NumberUtil.formatCurrency(value);
+    };
   }
 }

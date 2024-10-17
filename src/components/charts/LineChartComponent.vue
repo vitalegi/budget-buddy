@@ -7,9 +7,11 @@ import { onBeforeUnmount, onMounted, onUpdated, ref } from 'vue';
 
 import * as echarts from 'echarts';
 import { LineChart, LineChartSeries } from 'src/model/charts';
+import { OptionDataValue } from 'echarts/types/src/util/types.js';
 
 interface Props {
   data: LineChart;
+  formatTooltip: (value: string | number | Date | null | undefined) => string;
 }
 
 const props = defineProps<Props>();
@@ -47,6 +49,15 @@ function load(data: LineChart) {
       trigger: 'axis',
       axisPointer: {
         type: 'cross',
+      },
+      valueFormatter: (
+        value: OptionDataValue | OptionDataValue[],
+        dataIndex: number,
+      ) => {
+        if (value instanceof Array) {
+          return props.formatTooltip(value[dataIndex]);
+        }
+        return props.formatTooltip(value);
       },
     },
     legend: {
