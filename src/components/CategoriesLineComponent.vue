@@ -4,15 +4,13 @@
 
 <script setup lang="ts">
 import { LineChart } from 'src/model/charts';
-import { useAccountFilterStore } from 'src/stores/account-filter-store';
-import { useExpenseStore } from 'src/stores/expenses-store';
-import { useIntervalStore } from 'src/stores/interval-store';
 import ExpenseCategoryUtil from 'src/utils/expense-category-util';
 import { computed } from 'vue';
 import LineChartComponent from './charts/LineChartComponent.vue';
 import ExpenseUtil from 'src/utils/expense-util';
 import { getRgbCode } from 'src/model/icon';
 import FacadeFactory from 'src/facade/facade-factory';
+import ExpenseService from 'src/facade/expense-service';
 
 interface Props {
   credits: boolean;
@@ -22,22 +20,14 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const intervalStore = useIntervalStore();
-const accountFilterStore = useAccountFilterStore();
-const expenseStore = useExpenseStore();
-
 const factory = new FacadeFactory();
 
-const expenses = computed(() =>
-  expenseStore.expensesInInterval(
-    intervalStore.from,
-    intervalStore.to,
-    accountFilterStore.accountId,
-  ),
-);
+const expenseService = new ExpenseService();
+
+const expenses = computed(() => expenseService.getExpensesInScope());
 
 const data = computed((): LineChart => {
-  const accountId = accountFilterStore.accountId;
+  const accountId = expenseService.getSelectedAccount();
   const categories = ExpenseCategoryUtil.getCategories(
     expenses.value,
     accountId,
@@ -51,16 +41,16 @@ const data = computed((): LineChart => {
     }
     return false;
   });
-  let from = intervalStore.from;
-  let to = intervalStore.to;
+  let from = expenseService.getSelectedFrom();
+  let to = expenseService.getSelectedTo();
 
-  if (intervalStore.interval === 'all') {
+  if (expenseService.getIntervalType() === 'all') {
     from = ExpenseUtil.getSmallestYear(expenses.value);
     to = ExpenseUtil.getBiggestYear(expenses.value);
   }
   const dates = factory
     .chartService()
-    .dateRange(from, to, intervalStore.interval);
+    .dateRange(from, to, expenseService.getIntervalType());
   return factory.lineChartService().data(targetCategories, dates, {
     abs: props.abs,
     stack: false,
