@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import TimeInterval from 'src/model/interval';
 import {
-  add,
   addDays,
+  addHours,
   endOfDay,
   endOfMonth,
   endOfWeek,
@@ -21,48 +21,183 @@ interface State {
   to: Date;
 }
 
-function getLabel(interval: TimeInterval, from: Date, to: Date): string {
-  const options = { locale: it };
-  switch (interval) {
-    case 'all':
-      return 'All';
-    case 'yearly':
-      return format(from, 'yyyy');
-    case '90-days':
-      return format(from, 'dd-MM') + ' ' + format(to, 'dd-MM');
-    case 'monthly':
-      return format(from, "LLL ''yy", options);
-    case 'weekly':
-      return (
-        format(from, 'd LLL', options) +
-        ' - ' +
-        format(to, "d LLL ''yy", options)
-      );
-    case 'daily':
-      return format(from, "EEEE d LLL ''yy", options);
+interface Range {
+  from: Date;
+  to: Date;
+}
+
+const options = { locale: it };
+
+interface TimeIntervalService {
+  getLabel(from: Date, to: Date): string;
+  //getInterval(date: Date): Range;
+  select(): Range;
+  next(current: Range): Range;
+  previous(current: Range): Range;
+}
+
+class AllTimeIntervalService implements TimeIntervalService {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getLabel(from: Date, to: Date): string {
+    return 'All';
+  }
+  select(): Range {
+    return { from: new Date(0, 0, 0), to: new Date(9999, 0, 0) };
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  next(current: Range): Range {
+    return this.select();
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  previous(current: Range): Range {
+    return this.select();
   }
 }
 
-function getInterval(
-  date: Date,
-  interval: TimeInterval,
-): { from: Date; to: Date } {
+class YearlyTimeIntervalService implements TimeIntervalService {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getLabel(from: Date, to: Date): string {
+    return format(from, 'yyyy');
+  }
+  select(): Range {
+    const now = new Date();
+    return this.interval(now);
+  }
+  next(current: Range): Range {
+    const next = addHours(current.to, 1);
+    return this.interval(next);
+  }
+  previous(current: Range): Range {
+    const next = addHours(current.from, -1);
+    return this.interval(next);
+  }
+  private interval(date: Date): Range {
+    return { from: startOfYear(date), to: endOfYear(date) };
+  }
+}
+
+class DaysRollingTimeIntervalService implements TimeIntervalService {
+  days;
+
+  public constructor(days: number) {
+    this.days = days;
+  }
+
+  getLabel(from: Date, to: Date): string {
+    return this.format(from) + ' - ' + this.format(to);
+  }
+  select(): Range {
+    const today = endOfDay(new Date());
+    return {
+      from: addDays(startOfDay(today), -this.days),
+      to: today,
+    };
+  }
+  next(current: Range): Range {
+    const base = addHours(current.to, 1);
+    return {
+      from: startOfDay(base),
+      to: addDays(endOfDay(base), this.days),
+    };
+  }
+  previous(current: Range): Range {
+    const base = addHours(current.from, -1);
+    return {
+      from: addDays(startOfDay(base), -this.days),
+      to: endOfDay(base),
+    };
+  }
+  private format(date: Date) {
+    return format(date, "d LLL ''yy", options);
+  }
+}
+
+class MonthlyTimeIntervalService implements TimeIntervalService {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getLabel(from: Date, to: Date): string {
+    return format(from, "LLL ''yy", options);
+  }
+  select(): Range {
+    const now = new Date();
+    return this.interval(now);
+  }
+  next(current: Range): Range {
+    const next = addHours(current.to, 1);
+    return this.interval(next);
+  }
+  previous(current: Range): Range {
+    const next = addHours(current.from, -1);
+    return this.interval(next);
+  }
+  private interval(date: Date): Range {
+    return { from: startOfMonth(date), to: endOfMonth(date) };
+  }
+}
+
+class WeeklyTimeIntervalService implements TimeIntervalService {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getLabel(from: Date, to: Date): string {
+    return this.format(from) + ' - ' + this.format(to);
+  }
+  select(): Range {
+    const now = new Date();
+    return this.interval(now);
+  }
+  next(current: Range): Range {
+    const next = addHours(current.to, 1);
+    return this.interval(next);
+  }
+  previous(current: Range): Range {
+    const next = addHours(current.from, -1);
+    return this.interval(next);
+  }
+  private interval(date: Date): Range {
+    return {
+      from: startOfWeek(date, { weekStartsOn: 1 }),
+      to: endOfWeek(date, { weekStartsOn: 1 }),
+    };
+  }
+  private format(date: Date) {
+    return format(date, 'd LLL', options);
+  }
+}
+
+class DailyTimeIntervalService implements TimeIntervalService {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getLabel(from: Date, to: Date): string {
+    return format(from, "EEEE d LLL ''yy", options);
+  }
+  select(): Range {
+    const now = new Date();
+    return this.interval(now);
+  }
+  next(current: Range): Range {
+    const next = addHours(current.to, 1);
+    return this.interval(next);
+  }
+  previous(current: Range): Range {
+    const next = addHours(current.from, -1);
+    return this.interval(next);
+  }
+  private interval(date: Date): Range {
+    return { from: startOfDay(date), to: endOfDay(date) };
+  }
+}
+
+function getIntervalService(interval: TimeInterval): TimeIntervalService {
   switch (interval) {
     case 'all':
-      return { from: new Date(0, 0, 0), to: new Date(9999, 0, 0) };
+      return new AllTimeIntervalService();
     case 'yearly':
-      return { from: startOfYear(date), to: endOfYear(date) };
+      return new YearlyTimeIntervalService();
     case '90-days':
-      return { from: addDays(date, -90), to: date };
+      return new DaysRollingTimeIntervalService(90);
     case 'monthly':
-      return { from: startOfMonth(date), to: endOfMonth(date) };
+      return new MonthlyTimeIntervalService();
     case 'weekly':
-      return {
-        from: startOfWeek(date, { weekStartsOn: 1 }),
-        to: endOfWeek(date, { weekStartsOn: 1 }),
-      };
+      return new WeeklyTimeIntervalService();
     case 'daily':
-      return { from: startOfDay(date), to: endOfDay(date) };
+      return new DailyTimeIntervalService();
   }
 }
 
@@ -76,32 +211,36 @@ export const useIntervalStore = defineStore('interval', {
   },
   getters: {
     label: (state) => {
-      return getLabel(state.interval, state.from, state.to);
+      return getIntervalService(state.interval).getLabel(state.from, state.to);
     },
   },
   actions: {
     change(interval: TimeInterval) {
       this.interval = interval;
-      const value = getInterval(new Date(), interval);
-      this.from = value.from;
-      this.to = value.to;
+      const range = getIntervalService(interval).select();
+      this.from = range.from;
+      this.to = range.to;
     },
     now() {
-      const value = getInterval(new Date(), this.interval);
-      this.from = value.from;
-      this.to = value.to;
+      const range = getIntervalService(this.interval).select();
+      this.from = range.from;
+      this.to = range.to;
     },
     next() {
-      const date = add(this.to, { hours: 1 });
-      const value = getInterval(date, this.interval);
-      this.from = value.from;
-      this.to = value.to;
+      const range = getIntervalService(this.interval).next({
+        from: this.from,
+        to: this.to,
+      });
+      this.from = range.from;
+      this.to = range.to;
     },
     previous() {
-      const date = add(this.from, { hours: -1 });
-      const value = getInterval(date, this.interval);
-      this.from = value.from;
-      this.to = value.to;
+      const range = getIntervalService(this.interval).previous({
+        from: this.from,
+        to: this.to,
+      });
+      this.from = range.from;
+      this.to = range.to;
     },
   },
 });
