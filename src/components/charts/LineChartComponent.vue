@@ -12,6 +12,7 @@ import { OptionDataValue } from 'echarts/types/src/util/types.js';
 interface Props {
   data: LineChart;
   formatTooltip: (value: string | number | Date | null | undefined) => string;
+  legend?: 'scroll';
 }
 
 const props = defineProps<Props>();
@@ -60,12 +61,6 @@ function load(data: LineChart) {
         return props.formatTooltip(value);
       },
     },
-    legend: {
-      type: 'scroll',
-      data: data.series.map((s) => {
-        return { name: s.name };
-      }),
-    },
     toolbox: {
       feature: {
         //saveAsImage: {},
@@ -91,6 +86,14 @@ function load(data: LineChart) {
     ],
     series: processData(data.series),
   };
+  if (props.legend === 'scroll') {
+    option.legend = {
+      type: 'scroll',
+      data: data.series.map((s) => {
+        return { name: s.name };
+      }),
+    };
+  }
   chart.setOption(option, { replaceMerge: ['series'] });
 }
 

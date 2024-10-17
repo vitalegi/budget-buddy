@@ -1,5 +1,9 @@
 <template>
-  <LineChartComponent :data="data" :format-tooltip="tooltipFormatter" />
+  <LineChartComponent
+    :data="data"
+    :format-tooltip="tooltipFormatter"
+    legend="scroll"
+  />
 </template>
 
 <script setup lang="ts">
