@@ -5836,12 +5836,19 @@ workbox-recipes@7.1.0:
     workbox-routing "7.1.0"
     workbox-strategies "7.1.0"
 
-workbox-routing@7.1.0, workbox-routing@^7.0.0:
+workbox-routing@7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/workbox-routing/-/workbox-routing-7.1.0.tgz#c44bda350d1c5eb633ee97a660e64ce5473250c4"
   integrity sha512-oOYk+kLriUY2QyHkIilxUlVcFqwduLJB7oRZIENbqPGeBP/3TWHYNNdmGNhz1dvKuw7aqvJ7CQxn27/jprlTdg==
   dependencies:
     workbox-core "7.1.0"
+
+workbox-routing@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/workbox-routing/-/workbox-routing-7.3.0.tgz#fc86296bc1155c112ee2c16b3180853586c30208"
+  integrity sha512-ZUlysUVn5ZUzMOmQN3bqu+gK98vNfgX/gSTZ127izJg/pMMy4LryAthnYtjuqcjkN4HEAx1mdgxNiKJMZQM76A==
+  dependencies:
+    workbox-core "7.3.0"
 
 workbox-strategies@7.1.0:
   version "7.1.0"
