@@ -19,7 +19,7 @@
     "dexie": "^4.0.10",
     "echarts": "^5.5.1",
     "js-big-decimal": "^2.1.0",
-    "pinia": "^2.2.8",
+    "pinia": "^2.3.0",
     "quasar": "^2.17.4",
     "register-service-worker": "^1.7.2",
     "uuid": "^10.0.0",
