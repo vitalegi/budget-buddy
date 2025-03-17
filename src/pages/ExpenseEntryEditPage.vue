@@ -51,6 +51,7 @@ const expense = computed(() => {
   // if I land on the page before data is loaded (e.g. via direct link), this call will fail
   try {
     return expenseStore.expense(props.expenseId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return new Expense();
   }
@@ -117,16 +118,18 @@ async function update(evt: {
       evt.amount,
       evt.description,
     );
-    router.push('/');
+    void router.push('/');
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     Notify.create('Error: ' + e);
   }
 }
 async function deleteExpense(): Promise<void> {
   try {
     await expenseStore.deleteExpense(props.expenseId);
-    router.push('/');
+    void router.push('/');
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     Notify.create('Error: ' + e);
   }
 }

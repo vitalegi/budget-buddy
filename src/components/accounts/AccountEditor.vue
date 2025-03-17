@@ -14,24 +14,9 @@
       @update:model-value="update()"
       debounce="400"
     />
-    <q-checkbox
-      v-model="editor.active"
-      label="Active"
-      @update:model-value="update()"
-    />
-    <IconSelector
-      :icon="editor.icon"
-      :color="editor.color"
-      @change="changeIcon"
-    ></IconSelector>
-    <q-btn
-      v-if="addMode"
-      @click="save()"
-      class="full-width"
-      size="xl"
-      color="primary"
-      >Add</q-btn
-    >
+    <q-checkbox v-model="editor.active" label="Active" @update:model-value="update()" />
+    <IconSelector :icon="editor.icon" :color="editor.color" @change="changeIcon"></IconSelector>
+    <q-btn v-if="addMode" @click="save()" class="full-width" size="xl" color="primary">Add</q-btn>
   </q-form>
 </template>
 <script setup lang="ts">
@@ -70,7 +55,7 @@ const editor = ref<{
 });
 const addMode = computed(() => props.id === '');
 
-async function changeIcon(event: { icon: string; color: string }) {
+function changeIcon(event: { icon: string; color: string }) {
   editor.value.icon = event.icon;
   editor.value.color = event.color;
   update();
@@ -85,7 +70,7 @@ function update(): void {
 
 function save(): void {
   if (props.id !== '') {
-    accountStore.updateAccount(
+    void accountStore.updateAccount(
       editor.value.id,
       editor.value.name.trim(),
       editor.value.currency,
@@ -94,7 +79,7 @@ function save(): void {
       editor.value.color,
     );
   } else {
-    accountStore.addAccount(
+    void accountStore.addAccount(
       editor.value.name.trim(),
       editor.value.currency,
       editor.value.active,

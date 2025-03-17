@@ -1,9 +1,7 @@
 <template>
   <span class="balance-entry-value" :class="amountType">
     <span class="text-weight-medium"> {{ formatAmountIntPart }}</span>
-    <span class="decimal-part"
-      >,{{ formatAmountDecimalPart }} {{ currency }}
-    </span>
+    <span class="decimal-part">,{{ formatAmountDecimalPart }} {{ currency }} </span>
   </span>
 </template>
 
@@ -20,9 +18,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const amountType = computed(() =>
-  ExpenseUtil.isCredit(props.amount) ? 'credit' : 'debit',
-);
+const amountType = computed(() => (ExpenseUtil.isCredit(props.amount) ? 'credit' : 'debit'));
 
 const formatAmountIntPart = computed((): string => {
   const parts = BigDecimalUtil.format(props.amount);

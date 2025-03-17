@@ -16,12 +16,7 @@
       </q-item-section>
     </template>
 
-    <ExpenseItem
-      v-for="expense in expenses"
-      :key="expense.id"
-      :expense="expense"
-      dense
-    >
+    <ExpenseItem v-for="expense in expenses" :key="expense.id" :expense="expense" dense>
     </ExpenseItem>
   </q-expansion-item>
 </template>

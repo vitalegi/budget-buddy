@@ -28,7 +28,5 @@ const props = defineProps<Props>();
 
 const categoryStore = useCategoryStore();
 
-const categories = computed(() =>
-  categoryStore.categories(props.type).filter((c) => c.active),
-);
+const categories = computed(() => categoryStore.categories(props.type).filter((c) => c.active));
 </script>

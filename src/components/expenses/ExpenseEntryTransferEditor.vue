@@ -1,10 +1,5 @@
 <template>
-  <q-form
-    @submit="onSubmit"
-    class="col-12 q-pa-md q-gutter-y-md"
-    style="max-width: 600px"
-    greedy
-  >
+  <q-form @submit="onSubmit" class="col-12 q-pa-md q-gutter-y-md" style="max-width: 600px" greedy>
     <DateSelector v-model="qDate" :mask="DateUtil.Q_DATE_MASK" />
     <AccountSelector
       label="From account"
@@ -68,11 +63,7 @@ const submitButtonLabel = computed(() => {
 });
 
 function onSubmit() {
-  const mappedDate = convertDate(
-    qDate.value,
-    DateUtil.Q_DATE_FORMAT,
-    EXPENSE_DATE_FORMAT,
-  );
+  const mappedDate = convertDate(qDate.value, DateUtil.Q_DATE_FORMAT, EXPENSE_DATE_FORMAT);
   emit('submit', {
     date: mappedDate,
     credit: creditAccountId.value,
@@ -98,14 +89,12 @@ function convertDate(date: string, inFormat: string, outFormat: string) {
 
 function creditMustBeDifferentThanDebit(): ValidationRule {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (val: any) =>
-    (val && val !== debitAccountId.value) || 'Credit and Debit must differ';
+  return (val: any) => (val && val !== debitAccountId.value) || 'Credit and Debit must differ';
 }
 
 function debitMustBeDifferentThanCredit(): ValidationRule {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (val: any) =>
-    (val && val !== creditAccountId.value) || 'Credit and Debit must differ';
+  return (val: any) => (val && val !== creditAccountId.value) || 'Credit and Debit must differ';
 }
 
 onMounted(() => {

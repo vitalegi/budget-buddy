@@ -58,11 +58,7 @@ export const useExpenseStore = defineStore('expense', {
       );
       const categoryStore = useCategoryStore();
       const accountStore = useAccountStore();
-      const out = modelFactory.expense(
-        dto,
-        categoryStore.map,
-        accountStore.map,
-      );
+      const out = modelFactory.expense(dto, categoryStore.map, accountStore.map);
       await db.expenses.add(dto);
       this._entries.push(out);
       return out;
@@ -89,11 +85,7 @@ export const useExpenseStore = defineStore('expense', {
       );
       await db.expenses.update(expenseId, entry);
       const index = this._entries.findIndex((e) => e.id === expenseId);
-      const out = ModelFactory.expense(
-        entry,
-        categoryStore.map,
-        accountStore.map,
-      );
+      const out = ModelFactory.expense(entry, categoryStore.map, accountStore.map);
       this._entries.splice(index, 1, out);
       return out;
     },
@@ -104,12 +96,10 @@ export const useExpenseStore = defineStore('expense', {
       this._entries.splice(index, 1);
     },
 
-    async loadExpenses(entries: ExpenseDto[]): Promise<void> {
+    loadExpenses(entries: ExpenseDto[]): void {
       const categoryStore = useCategoryStore();
       const accountStore = useAccountStore();
-      const out = entries.map((e) =>
-        ModelFactory.expense(e, categoryStore.map, accountStore.map),
-      );
+      const out = entries.map((e) => ModelFactory.expense(e, categoryStore.map, accountStore.map));
       this._entries.push(...out);
     },
     async export(): Promise<{
@@ -135,8 +125,8 @@ async function loadCategories(): Promise<void> {
   const categoryStore = useCategoryStore();
   const startTime = DateUtil.timestamp();
   const entries = await db.categories.toArray();
-  const mapped = entries.map(Category.fromJson);
-  await categoryStore.loadCategories(mapped);
+  const mapped = entries.map((e: Category) => Category.fromJson(e));
+  categoryStore.loadCategories(mapped);
   console.log(`loaded categories in ${DateUtil.timestamp() - startTime}ms`);
 }
 
@@ -144,16 +134,16 @@ async function loadAccounts(): Promise<void> {
   const accountStore = useAccountStore();
   const startTime = DateUtil.timestamp();
   const entries = await db.accounts.toArray();
-  const mapped = entries.map(Account.fromJson);
-  await accountStore.loadAccounts(mapped);
+  const mapped = entries.map((e: Account) => Account.fromJson(e));
+  accountStore.loadAccounts(mapped);
   console.log(`loaded accounts in ${DateUtil.timestamp() - startTime}ms`);
 }
 
 async function loadExpenses(): Promise<void> {
   const startTime = DateUtil.timestamp();
   const entries = await db.expenses.toArray();
-  const mapped = entries.map(ExpenseDto.fromJson);
-  await expenseStore.loadExpenses(mapped);
+  const mapped = entries.map((e: ExpenseDto) => ExpenseDto.fromJson(e));
+  expenseStore.loadExpenses(mapped);
   console.log(`loaded expenses in ${DateUtil.timestamp() - startTime}ms`);
 }
 
@@ -163,4 +153,4 @@ async function loadData() {
   await loadExpenses();
 }
 
-loadData();
+void loadData();

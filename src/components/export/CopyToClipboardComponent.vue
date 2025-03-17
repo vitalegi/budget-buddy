@@ -29,13 +29,13 @@ const disabled = computed(() => props.content.length === 0);
 function exportFile() {
   loading.value = true;
   try {
-    navigator.clipboard.writeText(props.content);
+    void navigator.clipboard.writeText(props.content);
     showCopiedIcon.value = true;
     setTimeout(() => (showCopiedIcon.value = false), 1000);
   } catch (e) {
     Notify.create(
-      'Copy to clipboard is not allowed on your browser, try another method. Error: ' +
-        e,
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      'Copy to clipboard is not allowed on your browser, try another method. Error: ' + e,
     );
   } finally {
     loading.value = false;

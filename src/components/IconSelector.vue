@@ -14,11 +14,7 @@
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-actions>
       <q-card-section class="row q-col-gutter-xs">
-        <div
-          class="col-xs-4 col-md-3 col-lg-2 col-xl-1"
-          v-for="entry in icons"
-          :key="entry.icon"
-        >
+        <div class="col-xs-4 col-md-3 col-lg-2 col-xl-1" v-for="entry in icons" :key="entry.icon">
           <q-btn
             :outline="entry.icon !== props.icon"
             square

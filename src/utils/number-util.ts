@@ -23,10 +23,7 @@ export default class NumberUtil {
     return parseInt(s.substring(2), 16);
   }
 
-  public static min(
-    numbers: number[],
-    defaultValue = Number.MAX_SAFE_INTEGER,
-  ): number {
+  public static min(numbers: number[], defaultValue = Number.MAX_SAFE_INTEGER): number {
     if (numbers.length === 0) {
       return defaultValue;
     }

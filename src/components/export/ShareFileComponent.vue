@@ -42,6 +42,7 @@ async function share(): Promise<void> {
       console.debug('Share was cancelled by the user.');
       return;
     }
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     Notify.create('Failed sharing, try another method. Error: ' + err);
   }
 }

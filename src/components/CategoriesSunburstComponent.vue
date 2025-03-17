@@ -18,10 +18,7 @@ const expenses = computed(() => expenseService.getExpensesInScope());
 
 const data = computed((): SunburstSeries[] => {
   const accountId = expenseService.getSelectedAccount();
-  const categories = ExpenseCategoryUtil.getCategories(
-    expenses.value,
-    accountId,
-  );
+  const categories = ExpenseCategoryUtil.getCategories(expenses.value, accountId);
   return sunburstService.data(categories);
 });
 </script>

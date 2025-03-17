@@ -135,7 +135,6 @@ class MonthlyTimeIntervalService implements TimeIntervalService {
 }
 
 class WeeklyTimeIntervalService implements TimeIntervalService {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getLabel(from: Date, to: Date): string {
     return this.format(from) + ' - ' + this.format(to);
   }
