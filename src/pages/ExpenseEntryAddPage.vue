@@ -3,11 +3,7 @@
     <div class="col-12 text-h6 row justify-between q-pa-md">
       <span class="text-primary">Add expense</span>
     </div>
-    <ExpenseEntryTransferEditor
-      v-if="type === 'transfer'"
-      :add-mode="true"
-      @submit="add"
-    />
+    <ExpenseEntryTransferEditor v-if="type === 'transfer'" :add-mode="true" @submit="add" />
     <ExpenseEntryEditor v-else :type="type" :add-mode="true" @submit="add" />
   </q-page>
 </template>

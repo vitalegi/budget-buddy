@@ -40,9 +40,7 @@ export default class LineChartService {
       out.series.push(this.mapCategoryToSeries(category, dates, options));
     }
 
-    console.info(
-      `loaded line chart data in ${DateUtil.timestamp() - startTime}ms`,
-    );
+    console.info(`loaded line chart data in ${DateUtil.timestamp() - startTime}ms`);
     return out;
   }
 

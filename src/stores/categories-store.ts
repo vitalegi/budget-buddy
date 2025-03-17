@@ -15,16 +15,12 @@ export const useCategoryStore = defineStore('category', {
         if (type) {
           entries = entries.filter((c) => c.type === type);
         }
-        return entries.sort((c1, c2) =>
-          c1.name.toUpperCase() < c2.name.toUpperCase() ? -1 : 1,
-        );
+        return entries.sort((c1, c2) => (c1.name.toUpperCase() < c2.name.toUpperCase() ? -1 : 1));
       };
     },
     category(state) {
       return (id: string): Category => {
-        const entries = Array.from(state.map.values()).filter(
-          (e) => e.id === id,
-        );
+        const entries = Array.from(state.map.values()).filter((e) => e.id === id);
         if (entries.length === 0) {
           throw new Error(`No category with id ${id}`);
         }
@@ -40,14 +36,7 @@ export const useCategoryStore = defineStore('category', {
       icon: string,
       color: string,
     ): Promise<Category> {
-      const entry = ModelFactory.category(
-        null,
-        name,
-        active,
-        type,
-        icon,
-        color,
-      );
+      const entry = ModelFactory.category(null, name, active, type, icon, color);
       this.map.set(entry.id, entry);
       await db.categories.add(entry);
       return entry;

@@ -1,10 +1,5 @@
 <template>
-  <q-form
-    @submit="onSubmit"
-    class="col-12 q-pa-md q-gutter-y-md"
-    style="max-width: 600px"
-    greedy
-  >
+  <q-form @submit="onSubmit" class="col-12 q-pa-md q-gutter-y-md" style="max-width: 600px" greedy>
     <DateSelector v-model="qDate" :mask="DateUtil.Q_DATE_MASK" />
     <AccountSelector v-model="accountId" :allow-all="false" />
     <CategorySelector v-model="categoryId" :type="type" />
@@ -60,11 +55,7 @@ const submitButtonLabel = computed(() => {
 });
 
 function onSubmit() {
-  const mappedDate = convertDate(
-    qDate.value,
-    DateUtil.Q_DATE_FORMAT,
-    EXPENSE_DATE_FORMAT,
-  );
+  const mappedDate = convertDate(qDate.value, DateUtil.Q_DATE_FORMAT, EXPENSE_DATE_FORMAT);
   const type = props.type;
   let credit: string | null = null;
   let debit: string | null = null;

@@ -52,10 +52,7 @@ export default class ChartService {
     }
   }
 
-  public getDateBuckets(
-    expenses: Expense[],
-    dates: string[],
-  ): Map<string, Expense[]> {
+  public getDateBuckets(expenses: Expense[], dates: string[]): Map<string, Expense[]> {
     const buckets = new Map<string, Expense[]>();
 
     // preprocess all dates for faster access
@@ -72,9 +69,7 @@ export default class ChartService {
     for (const expense of expenses) {
       const targetBucketName = dateToBucket.get(expense.date);
       if (targetBucketName === undefined) {
-        throw new Error(
-          `Can't map ${expense.date} to buckets: ${Array.from(dateToBucket.keys())}`,
-        );
+        throw new Error(`Can't map ${expense.date} to buckets: ${Array.from(dateToBucket.keys())}`);
       }
       const target = buckets.get(targetBucketName);
       if (target === undefined) {

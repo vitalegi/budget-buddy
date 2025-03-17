@@ -20,9 +20,7 @@ export default class SunburstService {
       this.mapExpenseTypeToSeries(credits, 'Credits', COLOR_CREDIT, total),
       this.mapExpenseTypeToSeries(debits, 'Debits', COLOR_DEBIT, total),
     ];
-    console.info(
-      `loaded sunburst chart data in ${DateUtil.timestamp() - startTime}ms`,
-    );
+    console.info(`loaded sunburst chart data in ${DateUtil.timestamp() - startTime}ms`);
     return out;
   }
 

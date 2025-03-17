@@ -4,9 +4,7 @@
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title @click="$router.push('/')">
-          Budget Buddy
-        </q-toolbar-title>
+        <q-toolbar-title @click="$router.push('/')"> Budget Buddy </q-toolbar-title>
 
         <q-btn dense flat round icon="settings" @click="toggleRightDrawer" />
       </q-toolbar>
@@ -57,10 +55,7 @@
 
     <q-footer v-if="showFooterActions">
       <div class="row justify-evenly q-py-sm">
-        <div
-          class="col-12 row items-center justify-evenly"
-          style="max-width: 600px"
-        >
+        <div class="col-12 row items-center justify-evenly" style="max-width: 600px">
           <q-btn
             size="40px"
             round
@@ -115,8 +110,10 @@ const route = useRoute();
 
 const showFooterActions = computed(() => route.meta.footerActions);
 
-function updateAccountId(newAccountId: string) {
-  accountFilterStore.setAccountId(newAccountId);
+function updateAccountId(newAccountId?: string): void {
+  if (newAccountId) {
+    accountFilterStore.setAccountId(newAccountId);
+  }
 }
 
 function toggleLeftDrawer() {
