@@ -4,10 +4,7 @@ import ExpenseUtil from './expense-util';
 import BigDecimalUtil from './big-decimal-util';
 
 export default class ExpenseCategoryUtil {
-  public static getCategories(
-    expenses: Expense[],
-    accountId: string,
-  ): CategoryWithExpenses[] {
+  public static getCategories(expenses: Expense[], accountId: string): CategoryWithExpenses[] {
     const categories = new Map<string, CategoryWithExpenses>();
     for (const expense of expenses) {
       const category = ExpenseCategoryUtil.toCategoryGroup(expense, accountId);
@@ -37,10 +34,7 @@ export default class ExpenseCategoryUtil {
     return ExpenseUtil.sortCategoriesByAmount(list, false);
   }
 
-  private static toCategoryGroup(
-    expense: Expense,
-    accountId: string,
-  ): CategoryGroup | null {
+  private static toCategoryGroup(expense: Expense, accountId: string): CategoryGroup | null {
     if (expense.isTransfer()) {
       if (expense.credit?.id === accountId) {
         return {

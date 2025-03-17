@@ -2,13 +2,7 @@
   <q-page class="row content-start justify-evenly">
     <div class="col-12 text-h6 row justify-between q-pa-md">
       <span class="text-primary">Update expense</span>
-      <q-btn
-        round
-        outline
-        color="primary"
-        icon="delete"
-        @click="deleteExpense()"
-      />
+      <q-btn round outline color="primary" icon="delete" @click="deleteExpense()" />
     </div>
     <ExpenseEntryTransferEditor
       v-if="type === 'transfer'"

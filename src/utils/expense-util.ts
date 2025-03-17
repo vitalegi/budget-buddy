@@ -8,10 +8,7 @@ import { CategoryWithExpenses } from 'src/model/categories';
 export default class ExpenseUtil {
   public static ACCOUNT_ALL = 'ALL';
 
-  public static amountsWithSign(
-    expenses: Expense[],
-    accountId: string,
-  ): bigDecimal {
+  public static amountsWithSign(expenses: Expense[], accountId: string): bigDecimal {
     let amount = BigDecimalUtil.ZERO;
     for (const expense of expenses) {
       const value = ExpenseUtil.amountWithSign(expense, accountId);
@@ -20,10 +17,7 @@ export default class ExpenseUtil {
     return amount;
   }
 
-  public static amountWithSign(
-    expense: Expense,
-    accountId: string,
-  ): bigDecimal {
+  public static amountWithSign(expense: Expense, accountId: string): bigDecimal {
     const value = new bigDecimal(expense.amount);
     if (expense.isCredit()) {
       return value;
@@ -42,10 +36,7 @@ export default class ExpenseUtil {
   }
 
   public static inInterval(date: string, from: Date, to: Date): boolean {
-    return (
-      format(from, EXPENSE_DATE_FORMAT) <= date &&
-      date <= format(to, EXPENSE_DATE_FORMAT)
-    );
+    return format(from, EXPENSE_DATE_FORMAT) <= date && date <= format(to, EXPENSE_DATE_FORMAT);
   }
 
   public static matchesAccount(expense: Expense, accountId: string): boolean {
@@ -55,10 +46,7 @@ export default class ExpenseUtil {
     return expense.credit?.id === accountId || expense.debit?.id === accountId;
   }
 
-  public static filterByCategory(
-    expenses: Expense[],
-    categoryId: string,
-  ): Expense[] {
+  public static filterByCategory(expenses: Expense[], categoryId: string): Expense[] {
     return expenses.filter((e) => e.category?.id === categoryId);
   }
 
@@ -85,10 +73,7 @@ export default class ExpenseUtil {
     });
   }
 
-  public static sortExpensesByAmount(
-    expenses: Expense[],
-    asc: boolean,
-  ): Expense[] {
+  public static sortExpensesByAmount(expenses: Expense[], asc: boolean): Expense[] {
     const multiplier = asc ? 1 : -1;
     return expenses
       .map((e) => e)
@@ -99,10 +84,7 @@ export default class ExpenseUtil {
       });
   }
 
-  public static sortExpensesByDate(
-    expenses: Expense[],
-    asc: boolean,
-  ): Expense[] {
+  public static sortExpensesByDate(expenses: Expense[], asc: boolean): Expense[] {
     const multiplier = asc ? 1 : -1;
     return expenses
       .map((e) => e)
