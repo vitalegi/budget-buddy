@@ -7,11 +7,7 @@
         contentType="text/plain"
         color="primary"
       />
-      <ShareFileComponent
-        :filename="filename"
-        :content="content"
-        content-type="text/plain"
-      />
+      <ShareFileComponent :filename="filename" :content="content" content-type="text/plain" />
       <CopyToClipboardComponent :content="content" />
     </q-card-section>
   </q-card>
@@ -28,9 +24,7 @@ const expenseStore = useExpenseStore();
 
 const content = ref('');
 
-const filename = computed(
-  () => `budget-buddy-${format(new Date(), 'yyyy-MM-dd HHmmss')}.txt`,
-);
+const filename = computed(() => `budget-buddy-${format(new Date(), 'yyyy-MM-dd HHmmss')}.txt`);
 
 async function exportJson(): Promise<string> {
   const out = await expenseStore.export();

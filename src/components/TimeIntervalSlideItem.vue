@@ -1,17 +1,10 @@
 <template>
-  <q-slide-item
-    @left="previous"
-    @right="next"
-    right-color="grey-2"
-    left-color="grey-2"
-  >
+  <q-slide-item @left="previous" @right="next" right-color="grey-2" left-color="grey-2">
     <template v-slot:left v-if="showSlider"> </template>
     <template v-slot:right v-if="showSlider"> </template>
 
     <q-item>
-      <q-item-section
-        class="absolute-center text-subtitle1 text-weight-medium text-primary"
-      >
+      <q-item-section class="absolute-center text-subtitle1 text-weight-medium text-primary">
         {{ label }}
       </q-item-section>
     </q-item>

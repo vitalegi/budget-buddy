@@ -21,9 +21,7 @@ export default class BigDecimalUtil {
   public static getDecimalPart(val: bigDecimal, precision: number): bigDecimal {
     const abs = val.abs();
     const integerPart = BigDecimalUtil.getIntegerPart(abs).abs();
-    return abs
-      .subtract(integerPart)
-      .round(precision, bigDecimal.RoundingModes.DOWN);
+    return abs.subtract(integerPart).round(precision, bigDecimal.RoundingModes.DOWN);
   }
 
   public static sum(values: bigDecimal[]): bigDecimal {

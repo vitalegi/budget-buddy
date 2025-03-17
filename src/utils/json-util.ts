@@ -21,10 +21,7 @@ export default class JsonUtil {
    * @param defaultValue a number if value is optional, false if mandatory
    * @returns
    */
-  public static asInt(
-    value: unknown,
-    defaultValue: number | false = false,
-  ): number {
+  public static asInt(value: unknown, defaultValue: number | false = false): number {
     const v = JsonUtil.asIntNullable(value);
     if (v === null) {
       if (defaultValue === false) {
@@ -41,10 +38,7 @@ export default class JsonUtil {
    * @param defaultValue a number if value is optional, false if mandatory
    * @returns
    */
-  public static asDecimal(
-    value: unknown,
-    defaultValue: number | false = false,
-  ): number {
+  public static asDecimal(value: unknown, defaultValue: number | false = false): number {
     if (ObjectUtil.isNullOrUndefined(value)) {
       if (defaultValue === false) {
         throw Error('Value is mandatory');
@@ -66,10 +60,7 @@ export default class JsonUtil {
    * @param defaultValue a string if value is optional, false if mandatory
    * @returns
    */
-  public static asString(
-    value: unknown,
-    defaultValue: string | false = false,
-  ): string {
+  public static asString(value: unknown, defaultValue: string | false = false): string {
     if (ObjectUtil.isNullOrUndefined(value)) {
       if (defaultValue === false) {
         throw Error('Value is mandatory');
@@ -99,10 +90,7 @@ export default class JsonUtil {
     throw Error(`Value is not a boolean ${value}: ${typeof value}`);
   }
 
-  public static asDateOptional(
-    value: unknown,
-    defaultValue?: Date,
-  ): Date | undefined {
+  public static asDateOptional(value: unknown, defaultValue?: Date): Date | undefined {
     if (ObjectUtil.isNullOrUndefined(value)) {
       if (defaultValue) {
         return defaultValue;

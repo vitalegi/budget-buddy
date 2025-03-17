@@ -37,8 +37,7 @@ const accountStore = useAccountStore();
 
 const validationRules = computed(() => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mandatoryValue = (val: any) =>
-    (val && val.trim().length !== 0) || 'Value is mandatory';
+  const mandatoryValue = (val: any) => (val && val.trim().length !== 0) || 'Value is mandatory';
   return [mandatoryValue, ...props.rules];
 });
 

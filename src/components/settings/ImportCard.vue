@@ -1,12 +1,7 @@
 <template>
   <q-card>
     <q-card-section class="col-12 q-gutter-y-md">
-      <q-file
-        outlined
-        v-model="model"
-        @update:model-value="processFile"
-        :loading="loading"
-      >
+      <q-file outlined v-model="model" @update:model-value="processFile" :loading="loading">
         <template v-slot:prepend>
           <q-icon name="attach_file" />
         </template>
@@ -126,10 +121,9 @@ function mapLine(line: string): ExpenseIn {
   try {
     const parsed = parse(date, 'yyyy-MM-dd', new Date());
     out.date = format(parsed, 'yyyy-MM-dd');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    throw new Error(
-      `date is invalid, expected format yyyy-MM-dd, found value: ${date}`,
-    );
+    throw new Error(`date is invalid, expected format yyyy-MM-dd, found value: ${date}`);
   }
 
   const debit = columns[1].trim();
@@ -162,6 +156,7 @@ function mapLine(line: string): ExpenseIn {
       throw new Error('amount is zero');
     }
     out.amount = value.getValue();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     throw new Error(`amount is not a valid number, found value: ${amount}`);
   }
@@ -180,19 +175,12 @@ async function importEntries(entries: ExpenseIn[]): Promise<void> {
   const accountMap = await importAccounts(entries);
   const categoryMap = await importCategories(entries);
 
-  for (let e of entries) {
+  for (const e of entries) {
     const debit = mapExtractor(accountMap, e.debitAccountName, (v) => v.id);
     const credit = mapExtractor(accountMap, e.creditAccountName, (v) => v.id);
     const category = mapExtractor(categoryMap, e.categoryName, (v) => v.id);
     const amount = new bigDecimal(e.amount).abs().getValue();
-    await expenseStore.addExpense(
-      e.date,
-      credit,
-      debit,
-      category,
-      amount,
-      e.description,
-    );
+    await expenseStore.addExpense(e.date, credit, debit, category, amount, e.description);
   }
 }
 
@@ -211,25 +199,17 @@ function mapExtractor<E>(
   return null;
 }
 
-async function importAccounts(
-  entries: ExpenseIn[],
-): Promise<Map<string, Account>> {
+async function importAccounts(entries: ExpenseIn[]): Promise<Map<string, Account>> {
   // accounts
 
   let accounts = new Array<string>();
-  accounts.push(
-    ...entries.map((e) => e.debitAccountName).filter((e) => e !== null),
-  );
-  accounts.push(
-    ...entries.map((e) => e.creditAccountName).filter((e) => e !== null),
-  );
+  accounts.push(...entries.map((e) => e.debitAccountName).filter((e) => e !== null));
+  accounts.push(...entries.map((e) => e.creditAccountName).filter((e) => e !== null));
   accounts = ArrayUtil.distinct(accounts);
 
   const accountMap = new Map<string, Account>();
-  for (let e of accounts) {
-    const matches = accountStore.accounts.filter(
-      (v) => v.name.toLowerCase() === e.toLowerCase(),
-    );
+  for (const e of accounts) {
+    const matches = accountStore.accounts.filter((v) => v.name.toLowerCase() === e.toLowerCase());
 
     if (matches.length === 0) {
       const entry = await accountStore.addAccount(e, '', true, '', '');
@@ -241,14 +221,12 @@ async function importAccounts(
   return accountMap;
 }
 
-async function importCategories(
-  entries: ExpenseIn[],
-): Promise<Map<string, Category>> {
+async function importCategories(entries: ExpenseIn[]): Promise<Map<string, Category>> {
   const receivedCategories = ArrayUtil.distinct(
     entries.map((e) => e.categoryName).filter((e) => e !== null),
   );
   const categoryMap = new Map<string, Category>();
-  for (let e of receivedCategories) {
+  for (const e of receivedCategories) {
     const matches = categoryStore
       .categories()
       .filter((v) => v.name.toLowerCase() === e.toLowerCase());

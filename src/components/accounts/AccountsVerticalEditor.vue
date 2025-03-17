@@ -9,14 +9,7 @@
       </template>
       <q-card>
         <q-card-section>
-          <AccountEditor
-            id=""
-            currency=""
-            name=""
-            :active="true"
-            icon=""
-            color=""
-          />
+          <AccountEditor id="" currency="" name="" :active="true" icon="" color="" />
         </q-card-section>
       </q-card>
     </q-expansion-item>

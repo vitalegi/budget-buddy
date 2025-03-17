@@ -124,15 +124,15 @@ function toggleRightDrawer() {
   rightDrawerOpen.value = !rightDrawerOpen.value;
 }
 function addCredit() {
-  router.push('/add/credit');
+  void router.push('/add/credit');
 }
 
 function addDebit() {
-  router.push('/add/debit');
+  void router.push('/add/debit');
 }
 
 function addTransfer() {
-  router.push('/add/transfer');
+  void router.push('/add/transfer');
 }
 </script>
 <style scoped lang="scss">

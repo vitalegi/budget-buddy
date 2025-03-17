@@ -1,9 +1,5 @@
 <template>
-  <LineChartComponent
-    :data="data"
-    :format-tooltip="tooltipFormatter"
-    legend="scroll"
-  />
+  <LineChartComponent :data="data" :format-tooltip="tooltipFormatter" legend="scroll" />
 </template>
 
 <script setup lang="ts">
@@ -33,10 +29,7 @@ const tooltipFormatter = computed(() => chartService.amountFormatter());
 
 const data = computed((): LineChart => {
   const accountId = expenseService.getSelectedAccount();
-  const categories = ExpenseCategoryUtil.getCategories(
-    expenses.value,
-    accountId,
-  );
+  const categories = ExpenseCategoryUtil.getCategories(expenses.value, accountId);
   const targetCategories = categories.filter((e) => {
     if (ExpenseUtil.isDebit(e.amount)) {
       return props.debits;

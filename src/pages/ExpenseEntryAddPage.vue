@@ -42,8 +42,9 @@ async function add(evt: {
       evt.amount,
       evt.description,
     );
-    router.push('/');
+    void router.push('/');
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     Notify.create('Error: ' + e);
   }
 }

@@ -22,14 +22,7 @@ export const useAccountStore = defineStore('account', {
       icon: string,
       color: string,
     ): Promise<Account> {
-      const entry = ModelFactory.account(
-        null,
-        name,
-        currency,
-        active,
-        icon,
-        color,
-      );
+      const entry = ModelFactory.account(null, name, currency, active, icon, color);
       this.map.set(entry.id, entry);
       await db.accounts.add(entry);
       return entry;
@@ -42,19 +35,12 @@ export const useAccountStore = defineStore('account', {
       icon: string,
       color: string,
     ): Promise<Account> {
-      const entry = ModelFactory.account(
-        id,
-        name,
-        currency,
-        active,
-        icon,
-        color,
-      );
+      const entry = ModelFactory.account(id, name, currency, active, icon, color);
       this.map.set(entry.id, entry);
       await db.accounts.update(entry.id, entry);
       return entry;
     },
-    async loadAccounts(entries: Account[]): Promise<void> {
+    loadAccounts(entries: Account[]): void {
       entries.forEach((entry) => this.map.set(entry.id, entry));
     },
   },

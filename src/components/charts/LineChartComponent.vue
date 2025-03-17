@@ -51,10 +51,7 @@ function load(data: LineChart) {
       axisPointer: {
         type: 'cross',
       },
-      valueFormatter: (
-        value: OptionDataValue | OptionDataValue[],
-        dataIndex: number,
-      ) => {
+      valueFormatter: (value: OptionDataValue | OptionDataValue[], dataIndex: number) => {
         if (value instanceof Array) {
           return props.formatTooltip(value[dataIndex]);
         }

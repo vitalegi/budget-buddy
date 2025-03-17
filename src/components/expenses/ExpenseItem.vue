@@ -5,11 +5,7 @@
     <q-item-section top>
       <q-item-label @click="openEditor">
         <span class="text-grey-8">
-          <ExpenseValue
-            :amount="amount"
-            :currency="currency"
-            class="expense-value-span"
-          />
+          <ExpenseValue :amount="amount" :currency="currency" class="expense-value-span" />
 
           {{ expense.description }}</span
         >
@@ -60,7 +56,7 @@ const amount = computed(() => {
 });
 
 function openEditor() {
-  router.push(`/edit/${props.expense.id}`);
+  void router.push(`/edit/${props.expense.id}`);
 }
 </script>
 

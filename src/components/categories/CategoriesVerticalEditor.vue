@@ -9,14 +9,7 @@
       </template>
       <q-card>
         <q-card-section>
-          <CategoryEditor
-            id=""
-            type="credit"
-            name=""
-            :active="true"
-            icon=""
-            color=""
-          />
+          <CategoryEditor id="" type="credit" name="" :active="true" icon="" color="" />
         </q-card-section>
       </q-card>
     </q-expansion-item>

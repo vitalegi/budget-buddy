@@ -35,9 +35,7 @@ const data = computed((): LineChart => {
       seriesData.push(0);
     } else {
       seriesData.push(
-        BigDecimalUtil.getNumberValue(
-          ExpenseUtil.amountsWithSign(entries, accountId),
-        ),
+        BigDecimalUtil.getNumberValue(ExpenseUtil.amountsWithSign(entries, accountId)),
       );
     }
   }

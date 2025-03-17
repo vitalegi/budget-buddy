@@ -31,18 +31,10 @@
               <CategoriesSunburstComponent />
             </q-tab-panel>
             <q-tab-panel name="debits">
-              <CategoriesLineComponent
-                :debits="true"
-                :credits="false"
-                :abs="true"
-              />
+              <CategoriesLineComponent :debits="true" :credits="false" :abs="true" />
             </q-tab-panel>
             <q-tab-panel name="credits">
-              <CategoriesLineComponent
-                :debits="false"
-                :credits="true"
-                :abs="true"
-              />
+              <CategoriesLineComponent :debits="false" :credits="true" :abs="true" />
             </q-tab-panel>
             <q-tab-panel name="balance">
               <BalanceLineComponent />

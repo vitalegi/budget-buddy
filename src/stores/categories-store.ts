@@ -58,7 +58,7 @@ export const useCategoryStore = defineStore('category', {
       return entry;
     },
 
-    async loadCategories(entries: Category[]): Promise<void> {
+    loadCategories(entries: Category[]): void {
       entries.forEach((entry) => this.map.set(entry.id, entry));
     },
   },
