@@ -2,9 +2,12 @@
 
 # P0
 
-- usare indexeddb senza store
+- Crea template
+- selezionare span sui grafici
 
 # P1
+
+- usare indexeddb senza store
 
 # P2
 
@@ -12,7 +15,6 @@
 - quando aggiungi/modifichi un entry, seleziona categoria con menù con icone
 - Tracciare storico modifiche
 - Includere transfer tra account se visualizzazione con account=*
-- Crea template
 - Eliminare categoria (se vuota)
 - Eliminare account (se vuoto)
 - editor con tastierino numerico per importi
