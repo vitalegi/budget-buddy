@@ -1,5 +1,7 @@
 # Budget Buddy
 
+[![budget-buddy CI](https://github.com/vitalegi/budget-buddy/actions/workflows/budget-buddy-ci.yml/badge.svg)](https://github.com/vitalegi/budget-buddy/actions/workflows/budget-buddy-ci.yml)
+
 Budget utility PWA developed with speed, portability and offline mode features in mind.
 
 No advertisements or tracking cookies.
