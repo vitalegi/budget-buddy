@@ -1,5 +1,6 @@
 import Expense from 'src/model/expense';
 import TimeInterval from 'src/model/interval';
+import SpanInterval from 'src/model/span-interval';
 import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import { useExpenseStore } from 'src/stores/expenses-store';
 import { useIntervalStore } from 'src/stores/interval-store';
@@ -35,5 +36,8 @@ export default class ExpenseService {
   }
   public getIntervalType(): TimeInterval {
     return this.intervalStore.interval;
+  }
+  public getSpanType(): SpanInterval {
+    return this.intervalStore.span;
   }
 }

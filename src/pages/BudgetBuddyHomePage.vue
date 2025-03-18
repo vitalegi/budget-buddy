@@ -8,7 +8,7 @@
         </q-btn>
       </div>
       <div class="row col-12 justify-center">
-        <div style="max-width: 600px; width: 100%">
+        <div style="max-width: 600px" class="full-width">
           <q-tabs
             v-model="chartTab"
             dense
@@ -25,19 +25,22 @@
           <q-tab-panels
             v-model="chartTab"
             animated
-            style="background-color: transparent !important"
+            style="background-color: transparent !important; height: 280px"
           >
-            <q-tab-panel name="balance">
+            <q-tab-panel name="balance" class="row">
+              <SpanSelector class="q-mx-auto" />
               <BalanceLineComponent />
             </q-tab-panel>
             <q-tab-panel name="pie">
               <CategoriesSunburstComponent />
             </q-tab-panel>
-            <q-tab-panel name="debits">
-              <CategoriesLineComponent :debits="true" :credits="false" :abs="true" />
-            </q-tab-panel>
-            <q-tab-panel name="credits">
+            <q-tab-panel name="credits" class="row">
+              <SpanSelector class="q-mx-auto" />
               <CategoriesLineComponent :debits="false" :credits="true" :abs="true" />
+            </q-tab-panel>
+            <q-tab-panel name="debits" class="row">
+              <SpanSelector class="q-mx-auto" />
+              <CategoriesLineComponent :debits="true" :credits="false" :abs="true" />
             </q-tab-panel>
           </q-tab-panels>
           <ExpensesByCategories></ExpensesByCategories>
@@ -59,6 +62,7 @@ import { useAccountFilterStore } from 'src/stores/account-filter-store';
 import CategoriesSunburstComponent from 'src/components/CategoriesSunburstComponent.vue';
 import CategoriesLineComponent from 'src/components/CategoriesLineComponent.vue';
 import BalanceLineComponent from 'src/components/BalanceLineComponent.vue';
+import SpanSelector from 'src/components/SpanSelector.vue';
 
 defineOptions({
   name: 'BudgetBuddyHomePage',

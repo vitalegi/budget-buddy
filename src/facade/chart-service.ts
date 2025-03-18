@@ -1,9 +1,9 @@
-import { addDays, addMonths, addYears, format } from 'date-fns';
+import { addDays, addMonths, addWeeks, addYears, format } from 'date-fns';
 import Expense, { EXPENSE_DATE_FORMAT } from 'src/model/expense';
-import TimeInterval from 'src/model/interval';
 import NumberUtil from 'src/utils/number-util';
 import ExpenseService from './expense-service';
 import ExpenseUtil from 'src/utils/expense-util';
+import SpanInterval from 'src/model/span-interval';
 
 export default class ChartService {
   expenseService;
@@ -15,6 +15,7 @@ export default class ChartService {
   public getDatesInScope() {
     const expenses = this.expenseService.getExpensesInScope();
     const interval = this.expenseService.getIntervalType();
+    const span = this.expenseService.getSpanType();
     let from = this.expenseService.getSelectedFrom();
     let to = this.expenseService.getSelectedTo();
 
@@ -23,9 +24,9 @@ export default class ChartService {
       to = ExpenseUtil.getBiggestYear(expenses);
     }
 
-    return this.dateRange(from, to, interval);
+    return this.dateRange(from, to, span);
   }
-  public dateRange(from: Date, to: Date, interval: TimeInterval): string[] {
+  public dateRange(from: Date, to: Date, interval: SpanInterval): string[] {
     const dates = new Array<string>();
     let current = from;
     while (current < to) {
@@ -35,18 +36,14 @@ export default class ChartService {
     return dates;
   }
 
-  protected nextStep(current: Date, interval: TimeInterval): Date {
+  protected nextStep(current: Date, interval: SpanInterval): Date {
     switch (interval) {
-      case 'all':
-        return addYears(current, 1);
       case 'yearly':
-        return addMonths(current, 1);
-      case '90-days':
-        return addDays(current, 1);
+        return addYears(current, 1);
       case 'monthly':
-        return addDays(current, 1);
+        return addMonths(current, 1);
       case 'weekly':
-        return addDays(current, 1);
+        return addWeeks(current, 1);
       case 'daily':
         return addDays(current, 1);
     }
