@@ -17,10 +17,10 @@
             indicator-color="primary"
             :align="'center'"
           >
-            <q-tab name="balance" icon="account_balance" label="Balance" />
-            <q-tab name="pie" icon="data_usage" label="Split" />
-            <q-tab name="credits" icon="trending_up" label="In" />
-            <q-tab name="debits" icon="trending_down" label="Out" />
+            <q-tab name="balance" icon="account_balance" />
+            <q-tab name="pie" icon="data_usage" />
+            <q-tab name="credits" icon="trending_up" />
+            <q-tab name="debits" icon="trending_down" />
           </q-tabs>
           <q-tab-panels
             v-model="chartTab"
