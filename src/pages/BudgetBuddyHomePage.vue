@@ -27,6 +27,9 @@
             animated
             style="background-color: transparent !important"
           >
+            <q-tab-panel name="balance">
+              <BalanceLineComponent />
+            </q-tab-panel>
             <q-tab-panel name="pie">
               <CategoriesSunburstComponent />
             </q-tab-panel>
@@ -35,9 +38,6 @@
             </q-tab-panel>
             <q-tab-panel name="credits">
               <CategoriesLineComponent :debits="false" :credits="true" :abs="true" />
-            </q-tab-panel>
-            <q-tab-panel name="balance">
-              <BalanceLineComponent />
             </q-tab-panel>
           </q-tab-panels>
           <ExpensesByCategories></ExpensesByCategories>
