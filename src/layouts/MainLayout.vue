@@ -23,28 +23,22 @@
         </div>
       </div>
     </q-drawer>
-
     <q-drawer v-model="rightDrawerOpen" side="right" overlay bordered>
       <div class="row items-start justify-start">
-        <q-list bordered separator class="col-12">
-          <q-expansion-item expand-separator label="Categories">
-            <template v-slot:header>
-              <q-item-section> Categories </q-item-section>
-            </template>
-            <CategoriesVerticalEditor></CategoriesVerticalEditor>
-          </q-expansion-item>
-          <q-expansion-item expand-separator label="Accounts">
-            <template v-slot:header>
-              <q-item-section> Accounts </q-item-section>
-            </template>
-            <AccountsVerticalEditor></AccountsVerticalEditor>
-          </q-expansion-item>
-          <q-expansion-item expand-separator label="Accounts">
-            <template v-slot:header>
-              <q-item-section> Settings </q-item-section>
-            </template>
-            <SettingsList></SettingsList>
-          </q-expansion-item>
+        <q-list bordered class="col-12">
+          <q-item clickable v-ripple>
+            <q-item-section @click="$router.push('/settings/categories')"
+              >Categories</q-item-section
+            >
+          </q-item>
+          <q-item clickable v-ripple>
+            <q-item-section @click="$router.push('/settings/accounts')">Accounts</q-item-section>
+          </q-item>
+          <q-item clickable v-ripple>
+            <q-item-section @click="$router.push('/settings/backup')"
+              >Backup/Restore</q-item-section
+            >
+          </q-item>
         </q-list>
       </div>
     </q-drawer>
@@ -88,9 +82,6 @@
 </template>
 
 <script setup lang="ts">
-import AccountsVerticalEditor from 'src/components/accounts/AccountsVerticalEditor.vue';
-import CategoriesVerticalEditor from 'src/components/categories/CategoriesVerticalEditor.vue';
-import SettingsList from 'src/components/settings/SettingsList.vue';
 import TimeIntervalSelector from 'src/components/TimeIntervalSelector.vue';
 import AccountSelector from 'src/components/accounts/AccountSelector.vue';
 import { computed, ref } from 'vue';

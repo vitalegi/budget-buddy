@@ -22,6 +22,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/ExpenseEntryEditPage.vue'),
         props: true,
       },
+      {
+        path: '/settings/categories',
+        component: () => import('pages/CategoriesPage.vue'),
+      },
+      {
+        path: '/settings/accounts',
+        component: () => import('pages/AccountsPage.vue'),
+      },
+      {
+        path: '/settings/backup',
+        component: () => import('pages/BackupPage.vue'),
+      },
     ],
   },
 
