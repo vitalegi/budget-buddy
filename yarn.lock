@@ -1136,14 +1136,14 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.1.1.tgz#1ec17e2edbec25c8306d424ecfbf13c7de1aaa31"
   integrity sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==
 
-"@quasar/app-vite@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@quasar/app-vite/-/app-vite-2.2.1.tgz#31bda17e3be8c972924bde7d13a845c9cb543f0d"
-  integrity sha512-wGKmPgrEFj3UzxZym2v8ZhCADhrUdC6Q2LvnSYtCBRldgZI71er2j52prbX40rDVIIeVReRFYRae235kzDJHOA==
+"@quasar/app-vite@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@quasar/app-vite/-/app-vite-2.3.0.tgz#c6b91cb3fb18896570289dee4b1bc139dfde2c3f"
+  integrity sha512-AHMRa5cdZ/TmV9mJ0jg/fbTMaMtFDfxvOjuPHL75AH6cZHECkXZ7ndTdVM0mU3i6lYwWf8Rx5OEi/PCwAMYJng==
   dependencies:
     "@quasar/render-ssr-error" "^1.0.3"
     "@quasar/ssl-certificate" "^1.0.0"
-    "@quasar/vite-plugin" "^1.9.0"
+    "@quasar/vite-plugin" "^1.10.0"
     "@types/chrome" "^0.0.262"
     "@types/compression" "^1.7.5"
     "@types/cordova" "^11.0.3"
@@ -1199,10 +1199,10 @@
     fs-extra "^11.1.1"
     selfsigned "^2.1.1"
 
-"@quasar/vite-plugin@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@quasar/vite-plugin/-/vite-plugin-1.9.0.tgz#c95748490ebe3b769cbd851ea60f3461743c5083"
-  integrity sha512-r1MFtI2QZJ2g20pe75Zuv4aoi0uoK8oP0yEdzLWRoOLCbhtf2+StJpUza9TydYi3KcvCl9+4HUf3OAWVKoxDmQ==
+"@quasar/vite-plugin@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@quasar/vite-plugin/-/vite-plugin-1.10.0.tgz#0fff31c82e4093eebc338bc0f2f541a88a6aa4a4"
+  integrity sha512-4PJoTclz4ZjAfyqe0+hlkKcFJt0e2NX3Ac3hy8ILqUPdtZ24nCo5/xEHvTxZGBQMKRPwwePbO8CVs4n9EKJEug==
 
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
