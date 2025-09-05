@@ -185,6 +185,8 @@ export class IntervalServiceProvider {
         return new YearlyTimeIntervalService();
       case '90-days':
         return new DaysRollingTimeIntervalService(90);
+      case '30-days':
+        return new DaysRollingTimeIntervalService(90);
       case 'monthly':
         return new MonthlyTimeIntervalService();
       case 'weekly':
