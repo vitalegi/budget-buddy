@@ -10,7 +10,7 @@ export default class SpanService {
         return 'monthly';
       case '90-days':
         return 'daily';
-      case '90-days':
+      case '30-days':
         return 'daily';
       case 'monthly':
         return 'daily';
