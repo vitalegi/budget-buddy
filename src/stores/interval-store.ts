@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import TimeInterval from 'src/model/interval';
-import { endOfMonth, startOfMonth } from 'date-fns';
+import { endOfMonth, startOfMonth, addDays, endOfDay, startOfDay } from 'date-fns';
 import SpanInterval from 'src/model/span-interval';
 import { spanService } from 'src/facade/span-service';
 import { IntervalServiceProvider } from 'src/facade/interval-service';
@@ -21,8 +21,8 @@ export const useIntervalStore = defineStore('interval', {
     return {
       interval: '30-days',
       span: 'daily',
-      from: startOfMonth(new Date()),
-      to: endOfMonth(new Date()),
+      from: addDays(startOfDay(new Date()), -30),
+      to: endOfDay(new Date()),
     };
   },
   getters: {
