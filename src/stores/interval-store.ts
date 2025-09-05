@@ -19,7 +19,7 @@ function intervalServiceProvider(): IntervalServiceProvider {
 export const useIntervalStore = defineStore('interval', {
   state: (): State => {
     return {
-      interval: 'monthly',
+      interval: '30-days',
       span: 'daily',
       from: startOfMonth(new Date()),
       to: endOfMonth(new Date()),
