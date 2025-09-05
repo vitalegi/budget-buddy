@@ -24,6 +24,7 @@ const options: { label: string; interval: TimeInterval }[] = [
   { label: 'Weekly', interval: 'weekly' },
   { label: 'Monthly', interval: 'monthly' },
   { label: '90 Days', interval: '90-days' },
+  { label: '30 Days', interval: '30-days' },
   { label: 'Yearly', interval: 'yearly' },
   { label: 'All', interval: 'all' },
 ];
