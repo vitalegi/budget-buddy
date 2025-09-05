@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import TimeInterval from 'src/model/interval';
-import { endOfMonth, startOfMonth, addDays, endOfDay, startOfDay } from 'date-fns';
+import { addDays, endOfDay, startOfDay } from 'date-fns';
 import SpanInterval from 'src/model/span-interval';
 import { spanService } from 'src/facade/span-service';
 import { IntervalServiceProvider } from 'src/facade/interval-service';
